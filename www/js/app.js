@@ -76,6 +76,31 @@ angular.module('todo', ['ionic'])
       });
     };
 
+    // $scope.notesPopup = function() {
+    //   // An elaborate, custom popup
+    //   var myPopup = $ionicPopup.show({
+    //     template: '<input type="text" ng-model="task.title">',
+    //     title: 'Add your notes here',
+    //     subTitle: 'Please use normal things',
+    //     scope: $scope,
+    //     buttons: [
+    //       { text: 'Cancel' },
+    //       {
+    //         text: '<b>Save</b>',
+    //         type: 'button-positive',
+    //         onTap: function(e) {
+    //           if (!$scope.task.title) {
+    //             //don't allow the user to close unless he enters wifi password
+    //             e.preventDefault();
+    //           } else {
+    //             return $scope.task.title;
+    //           }
+    //         }
+    //       },
+    //     ]
+    //   });
+    // }
+    // 
     $scope.editTitle = function (task) {
       var scope = $scope.$new(true);
       scope.data = { response: task.title } ;
