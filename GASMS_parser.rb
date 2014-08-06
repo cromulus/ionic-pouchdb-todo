@@ -68,4 +68,8 @@ newbs.delete_if {|k, v| v.nil? || k.nil? }
 mentors.delete_if {|k, v| v.nil? || k.nil? }
 vets.delete_if {|k, v| v.nil? || k.nil? }
 
-newbs.each{|k,v| puts v}
+newb_json=JSON.generate(newbs)
+mentor_json=JSON.generate(mentors)
+
+File.open("./www/mentors.json", 'w') { |file| file.write(mentor_json) }
+File.open("./www/newbs.json", 'w') { |file| file.write(newb_json) }

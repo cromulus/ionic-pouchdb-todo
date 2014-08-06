@@ -13,7 +13,7 @@ angular.module('todo', ['ionic'])
   .controller('TodoCtrl', function($scope, $ionicModal, todoDb, $ionicPopup, $ionicListDelegate) {
     // Initialize tasks
     $scope.tasks = [];
-    $scope.mentor = "quantum"
+    $scope.mentor = {name:"Not You",id:"0"}
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
