@@ -110,6 +110,7 @@ angular.module('todo', ['ionic'])
 
     $scope.createTask = function(task) {
       task.completed = false;
+      task.timestamp = Math.round(+new Date()/1000);
       todoDb.post(angular.copy(task), function(err, res) {
         if (err) console.log(err)
         task.title = "";

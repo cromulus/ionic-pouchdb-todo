@@ -61,6 +61,8 @@
     <!-- Modal content area -->
     <ion-content>
       <form ng-submit="createTask(task)">
+        <input type="hidden" ng-model="task.mentorid" value="{{mentor.id}}">
+        <input type="hidden" ng-model="task.mentor" value="{{mentor.name}}">
         <div class="list">
           <label class="item item-input">
             <input type="text" placeholder="Any Notes?" ng-model="task.title">
