@@ -4,26 +4,26 @@ angular.module('todo', ['ionic'])
     var db = new PouchDB('todos');
     return db;
   })
+  .factory('mentors',function(){
+    return $http.get('mentors.json');
+  })
+  .factory('newbs',function(){
+    return $http.get('newbs.json');
+  })
   .controller('TodoCtrl', function($scope, $ionicModal, todoDb, $ionicPopup, $ionicListDelegate) {
     // Initialize tasks
     $scope.tasks = [];
-
+    $scope.mentor = "quantum"
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
-    $scope.online = false;
-    $scope.toggleOnline = function() {
-      $scope.online = !$scope.online;
-      if ($scope.online) {  // Read http://pouchdb.com/api.html#sync
-        $scope.sync = todoDb.sync('http://127.0.0.1:5984/todos', {live: true})
-          .on('error', function (err) {
-            console.log("Syncing stopped");
-            console.log(err);
-          });
-      } else {
-        $scope.sync.cancel();
-      }
-    };
+
+    $scope.sync = todoDb.sync('http://127.0.0.1:5984/todos', {live: true})
+      .on('error', function (err) {
+        console.log("Syncing stopped");
+        console.log(err);
+      });
+
 
     $scope.completionChanged = function(task) {
       task.completed = !task.completed;
