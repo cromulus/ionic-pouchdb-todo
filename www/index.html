@@ -65,124 +65,65 @@
           <label class="item item-input">
             <input type="text" placeholder="Any Notes?" ng-model="task.title">
           </label>
-          <div class="item range range-positive">
-            <i class="icon ion-ios7-sunny-outline"></i>
-            <input type="range" name="volume" min="0" max="100" value="33">
-            <i class="icon ion-ios7-sunny"></i>
+          <div class="item item-divider">
+            Protocol: {{task.protocol}}
           </div>
-          <label class="item range range-positive">
-            <div class="input-label">
-              Protocol
-            </div>
-            <i class="ion-sad"></i>
-            <input type="range" name="volume" min="0" max="10" value="5">
-            <i class="ion-happy"></i>
-          </label>
-          <label class="item item-input item-select">
-            <div class="input-label">
-              Social Acumen
-            </div>
-            <select ng-model="task.social">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-          </label>
-          <label class="item item-input item-select">
-            <div class="input-label">
-              Small Vehicle Search
-            </div>
-            <select ng-model="task.small_search">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-          </label>
-          <label class="item item-input item-select">
-            <div class="input-label">
-              Large Search
-            </div>
-            <select ng-model="task.large_search">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-          </label>
-          <label class="item item-input item-select">
-            <div class="input-label">
-              Lane Safety
-            </div>
-            <select ng-model="task.safety">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-          </label>
-          <label class="item item-input item-select">
-            <div class="input-label">
-              Theater
-            </div>
-            <select ng-model="task.theater">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-          </label>
-          <label class="item item-input item-select">
-            <div class="input-label">
-              Follows Direction
-            </div>
-            <select ng-model="task.direction">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option selected>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </select>
-          </label>
+          <div class="item range range-positive">
+            <span>0</span>
+            <input ng-model= "task.protocol" type="range" name="volume" min="0" max="10" value="5">
+            <span>10</span>
+          </div>
+          <div class="item item-divider">
+            Social Acument: {{task.social}}
+          </div>
+          <div class="item range range-positive">
+            <span>0</span>
+            <input ng-model= "task.social" type="range" name="volume" min="0" max="10" value="5">
+            <span>10</span>
+          </div>
+          <div class="item item-divider">
+            Small Vehicle Search: {{task.small}}
+          </div>
+          <div class="item range range-positive">
+            <span>0</span>
+            <input ng-model= "task.small" type="range" name="volume" min="0" max="10" value="5">
+            <span>10</span>
+          </div>
+          <div class="item item-divider">
+            Large Vehicle Search: {{task.large}}
+          </div>
+          <div class="item range range-positive">
+            <span>0</span>
+            <input ng-model= "task.large" type="range" name="volume" min="0" max="10" value="5">
+            <span>10</span>
+          </div>
+          <div class="item item-divider">
+            Lane Safety: {{task.safety}}
+          </div>
+          <div class="item range range-positive">
+            <span>0</span>
+            <input ng-model= "task.safety" type="range" name="volume" min="0" max="10" value="5">
+            <span>10</span>
+          </div>
+          <div class="item item-divider">
+            Theater: {{task.theater}}
+          </div>
+          <div class="item range range-positive">
+            <span>0</span>
+            <input ng-model= "task.theater" type="range" name="volume" min="0" max="10" value="5">
+            <span>10</span>
+          </div>
+          <div class="item item-divider">
+            Follows Direction: {{task.direction}}
+          </div>
+          <div class="item range range-positive">
+            <span>0</span>
+            <input ng-model= "task.direction" type="range" name="volume" min="0" max="10" value="5">
+            <span>10</span>
+          </div>
         </div>
         <div class="padding">
-          <button type="submit" class="button button-block button-positive">Create Task</button>
+          <button type="submit" class="button button-block button-positive">Save Report</button>
         </div>
       </form>
     </ion-content>
