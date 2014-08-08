@@ -132,7 +132,11 @@ angular.module('reporting', ['ionic'])
     }
 
     $scope.newReport = function() {
-      $scope.reportModal.show();
+      if ($scope.mentor == "Not You") {
+        $scope.mentorModal.show();
+      }else{
+        $scope.reportModal.show();
+      }
     };
 
     $scope.closeNewReport = function() {
