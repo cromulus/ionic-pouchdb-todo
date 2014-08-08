@@ -13,7 +13,7 @@ angular.module('reporting', ['ionic'])
   .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate) {
     // Initialize reports
     $scope.reports = [];
-    $scope.mentor = {name:"Not You",id:"0"}
+    $scope.mentor = "Not You"
 
     $http.get('mentors.json').success(function (data) {
         $scope.mentors = data;
@@ -83,34 +83,34 @@ angular.module('reporting', ['ionic'])
       });
     };
 
-    $scope.editReport = function (report) {
-      var scope = $scope.$new(true);
-      scope.data = { response: report.title } ;
-      $ionicPopup.prompt({
-        title: 'Edit report:',
-        scope: scope,
-        buttons: [
-          { text: 'Cancel',  onTap: function(e) { return false; } },
-          {
-            text: '<b>Save</b>',
-            type: 'button-positive',
-            onTap: function(e) {
-              return scope.data.response
-            }
-          },
-        ]
-      }).then(function (newTitle) {
-        if (newTitle && newTitle != report.title) {
-          report.title = newTitle;
-          $scope.update(report);
-        }
-        $ionicListDelegate.closeOptionButtons();
-      });
-    };
+    // $scope.editReport = function (report) {
+    //   var scope = $scope.$new(true);
+    //   scope.data = { response: report.title } ;
+    //   $ionicPopup.prompt({
+    //     title: 'Edit report:',
+    //     scope: scope,
+    //     buttons: [
+    //       { text: 'Cancel',  onTap: function(e) { return false; } },
+    //       {
+    //         text: '<b>Save</b>',
+    //         type: 'button-positive',
+    //         onTap: function(e) {
+    //           return scope.data.response
+    //         }
+    //       },
+    //     ]
+    //   }).then(function (newTitle) {
+    //     if (newTitle && newTitle != report.title) {
+    //       report.title = newTitle;
+    //       $scope.update(report);
+    //     }
+    //     $ionicListDelegate.closeOptionButtons();
+    //   });
+    // };
 
     // Create our modal
-    $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
-      $scope.reportModal = modal;
+    $ionicModal.fromTemplateUrl('mentor-list.html', function(modal) {
+      $scope.mentorModal = modal;
     }, {
       scope: $scope
     });
@@ -125,12 +125,37 @@ angular.module('reporting', ['ionic'])
       $scope.reportModal.hide();
     };
 
-    $scope.newreport = function() {
+    $scope.editReport = function(report) {
+      $scope.this_report=report;
+      $score.reportModal.show();
+    }
+
+    $scope.newReport = function() {
       $scope.reportModal.show();
     };
 
-    $scope.closeNewreport = function() {
+    $scope.closeNewReport = function() {
       $scope.reportModal.hide();
     };
+
+    // Create our mentors modal
+    $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
+      $scope.reportModal = modal;
+    }, {
+      scope: $scope
+    });
+
+    $scope.showMentors = function(){
+      $scope.mentorModal.show();
+    }
+    $scope.hideMentors = function(){
+      $scope.mentorModal.hide();
+    }
+    $scope.selectMentor = function(mentor){
+      console.log(mentor);
+      $scope.mentor = mentor;
+      $scope.reportModal.hide();
+    }
+
 
   });

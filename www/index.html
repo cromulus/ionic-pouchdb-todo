@@ -22,14 +22,14 @@
 
 <body ng-app="reporting" ng-controller="reportCtrl">
 <ion-header-bar class="bar-positive">
-  <h1 class="title">{{mentor.name}}</h1>
+  <h1 class="title" ng-click="showMentors()">{{mentor}}</h1>
   <!-- ########################################### -->
   <!-- ###    Add button for online toggle     ### -->
   <!-- ########################################### -->
   <button class="button button-icon" ng-click="toggleOnline()">
     <i class="icon" ng-class="{'ion-connection-bars' : online, 'ion-alert-circled' : !online}"></i>
   </button>
-  <button class="button button-icon" ng-click="createReport()">
+  <button class="button button-icon" ng-click="newReport()">
     <i class="ion-compose icon"></i>
   </button>
 </ion-header-bar>
@@ -37,7 +37,7 @@
   <ion-list>
     <ion-item ng-repeat="report in report" class="item-icon-right"
               ng-class="{complete: report.completed}"
-              ng-click="completionChanged(report)">
+              ng-click="editReport(report)">
       <i class="icon ion-ios7-arrow-left"></i>
       {{report.title}}
       <ion-option-button class="button-energized" ng-click="editReport(report)">
@@ -49,6 +49,23 @@
     </ion-item>
   </ion-list>
 </ion-content>
+
+<script id="mentor-list.html" type="text/ng-template">
+  <div class="modal">
+    <ion-header-bar class="bar-secondary">
+      <h1 class="title">Which Fuckwad are You?</h1>
+      <button class="button button-clear button-positive" ng-click="hideMentors()">Cancel</button>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <ion-item ng-repeat="mentor in mentors" class="item-icon-right"
+                ng-click="selectMentor(mentor)">
+                {{mentor}}
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </div>
+</script>
 
 <script id="new-report.html" type="text/ng-template">
   <div class="modal">
