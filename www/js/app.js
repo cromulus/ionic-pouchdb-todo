@@ -117,13 +117,6 @@ angular.module('reporting', ['ionic'])
       r.millitimestamp = Date.now();
       r.mentor = $scope.mentor;
       r.newb = $scope.newb;
-      r.protocol = typeof r.protocol !== 'undefined' ? report.protocol : 5;
-      r.social = typeof r.social !== 'undefined' ? r.social : 5;
-      r.small = typeof r.small !== 'undefined' ? r.small : 5;
-      r.large = typeof r.large !== 'undefined' ? r.large : 5;
-      r.safety = typeof r.safety !== 'undefined' ? r.safety : 5;
-      r.theater = typeof r.theater !== 'undefined' ? r.theater : 5;
-      r.direction = typeof r.direction !== 'undefined' ? r.direction : 5;
 
       reportDb.post(angular.copy(r), function(err, res) {
         if (err) console.log(err)
@@ -151,6 +144,16 @@ angular.module('reporting', ['ionic'])
         $scope.mentorModal.show();
       }else{
         $scope.newb=newb;
+        // defaulting things appropriately
+        r={};
+        r.protocol = 5;
+        r.social = 5;
+        r.small = 5;
+        r.large = 5;
+        r.safety = 5;
+        r.theater = 5;
+        r.direction = 5;
+        $scope.report=r;
         $scope.reportModal.show();
       }
     };
