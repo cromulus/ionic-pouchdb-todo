@@ -1,56 +1,63 @@
-angular.module('todo', ['ionic'])
+angular.module('reporting', ['ionic'])
   // Simple PouchDB factory
-  .factory('todoDb', function() {
-    var db = new PouchDB('todos');
+  .factory('reportDb', function() {
+    var db = new PouchDB('reports');
     return db;
   })
-  .factory('mentors',function(){
-    return $http.get('mentors.json');
-  })
-  .factory('newbs',function(){
-    return $http.get('newbs.json');
-  })
-  .controller('TodoCtrl', function($scope, $ionicModal, todoDb, $ionicPopup, $ionicListDelegate) {
-    // Initialize tasks
-    $scope.tasks = [];
+  // .factory('mentorList',function(){
+  //   return $http.get('/mentors.json');
+  // })
+  // .factory('newbList',function(){
+  //   return $http.get('/newbs.json');
+  // })
+  .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate) {
+    // Initialize reports
+    $scope.reports = [];
     $scope.mentor = {name:"Not You",id:"0"}
+
+    $http.get('mentors.json').success(function (data) {
+        $scope.mentors = data;
+    });
+    $http.get('newbs.json').success(function (data) {
+        $scope.newbs = data;
+    });
+
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
-
-    $scope.sync = todoDb.sync('http://127.0.0.1:5984/todos', {live: true})
+    $scope.sync = reportDb.sync('http://127.0.0.1:5984/reports', {live: true})
       .on('error', function (err) {
         console.log("Syncing stopped");
         console.log(err);
       });
 
 
-    $scope.completionChanged = function(task) {
-      task.completed = !task.completed;
-      $scope.update(task);
+    $scope.completionChanged = function(report) {
+      report.completed = !report.completed;
+      $scope.update(report);
     };
 
-    todoDb.changes({
+    reportDb.changes({
       live: true,
       onChange: function (change) {
         if (!change.deleted) {
-          todoDb.get(change.id, function(err, doc) {
+          reportDb.get(change.id, function(err, doc) {
             if (err) console.log(err);
             $scope.$apply(function() { //UPDATE
-              for (var i = 0; i < $scope.tasks.length; i++) {
-                if ($scope.tasks[i]._id === doc._id) {
-                  $scope.tasks[i] = doc;
+              for (var i = 0; i < $scope.reports.length; i++) {
+                if ($scope.reports[i]._id === doc._id) {
+                  $scope.reports[i] = doc;
                   return;
                 }
               } // CREATE / READ
-              $scope.tasks.push(doc);
+              $scope.reports.push(doc);
             });
           })
         } else { //DELETE
           $scope.$apply(function () {
-            for (var i = 0; i<$scope.tasks.length; i++) {
-              if ($scope.tasks[i]._id === change.id) {
-                $scope.tasks.splice(i,1);
+            for (var i = 0; i<$scope.reports.length; i++) {
+              if ($scope.reports[i]._id === change.id) {
+                $scope.reports.splice(i,1);
               }
             }
           })
@@ -58,54 +65,29 @@ angular.module('todo', ['ionic'])
       }
     });
 
-    $scope.update = function (task) {
-      todoDb.get(task._id, function (err, doc) {
+    $scope.update = function (report) {
+      reportDb.get(report._id, function (err, doc) {
         if (err) {
           console.log(err);
         } else {
-          todoDb.put(angular.copy(task), doc._rev, function (err, res) {
+          reportDb.put(angular.copy(report), doc._rev, function (err, res) {
             if (err) console.log(err);
           });
         }
       });
     };
 
-    $scope.delete = function(task) {
-      todoDb.get(task._id, function (err, doc) {
-        todoDb.remove(doc, function (err, res) {});
+    $scope.delete = function(report) {
+      reportDb.get(report._id, function (err, doc) {
+        reportDb.remove(doc, function (err, res) {});
       });
     };
 
-    // $scope.notesPopup = function() {
-    //   // An elaborate, custom popup
-    //   var myPopup = $ionicPopup.show({
-    //     template: '<input type="text" ng-model="task.title">',
-    //     title: 'Add your notes here',
-    //     subTitle: 'Please use normal things',
-    //     scope: $scope,
-    //     buttons: [
-    //       { text: 'Cancel' },
-    //       {
-    //         text: '<b>Save</b>',
-    //         type: 'button-positive',
-    //         onTap: function(e) {
-    //           if (!$scope.task.title) {
-    //             //don't allow the user to close unless he enters wifi password
-    //             e.preventDefault();
-    //           } else {
-    //             return $scope.task.title;
-    //           }
-    //         }
-    //       },
-    //     ]
-    //   });
-    // }
-    // 
-    $scope.editTitle = function (task) {
+    $scope.editReport = function (report) {
       var scope = $scope.$new(true);
-      scope.data = { response: task.title } ;
+      scope.data = { response: report.title } ;
       $ionicPopup.prompt({
-        title: 'Edit task:',
+        title: 'Edit report:',
         scope: scope,
         buttons: [
           { text: 'Cancel',  onTap: function(e) { return false; } },
@@ -118,37 +100,37 @@ angular.module('todo', ['ionic'])
           },
         ]
       }).then(function (newTitle) {
-        if (newTitle && newTitle != task.title) {
-          task.title = newTitle;
-          $scope.update(task);
+        if (newTitle && newTitle != report.title) {
+          report.title = newTitle;
+          $scope.update(report);
         }
         $ionicListDelegate.closeOptionButtons();
       });
     };
 
     // Create our modal
-    $ionicModal.fromTemplateUrl('new-task.html', function(modal) {
-      $scope.taskModal = modal;
+    $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
+      $scope.reportModal = modal;
     }, {
       scope: $scope
     });
 
-    $scope.createTask = function(task) {
-      task.completed = false;
-      task.timestamp = Math.round(+new Date()/1000);
-      todoDb.post(angular.copy(task), function(err, res) {
+    $scope.createReport = function(report) {
+      report.completed = false;
+      report.timestamp = Math.round(+new Date()/1000);
+      reportDb.post(angular.copy(report), function(err, res) {
         if (err) console.log(err)
-        task.title = "";
+        report.title = "";
       });
-      $scope.taskModal.hide();
+      $scope.reportModal.hide();
     };
 
-    $scope.newTask = function() {
-      $scope.taskModal.show();
+    $scope.newreport = function() {
+      $scope.reportModal.show();
     };
 
-    $scope.closeNewTask = function() {
-      $scope.taskModal.hide();
+    $scope.closeNewreport = function() {
+      $scope.reportModal.hide();
     };
 
   });

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>ToDo v6 online</title>
+  <title>Mentor Reporting</title>
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 
   <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -20,7 +20,7 @@
   <script src="js/app.js"></script>
 </head>
 
-<body ng-app="todo" ng-controller="TodoCtrl">
+<body ng-app="reporting" ng-controller="reportCtrl">
 <ion-header-bar class="bar-positive">
   <h1 class="title">{{mentor.name}}</h1>
   <!-- ########################################### -->
@@ -29,98 +29,98 @@
   <button class="button button-icon" ng-click="toggleOnline()">
     <i class="icon" ng-class="{'ion-connection-bars' : online, 'ion-alert-circled' : !online}"></i>
   </button>
-  <button class="button button-icon" ng-click="newTask()">
+  <button class="button button-icon" ng-click="createReport()">
     <i class="ion-compose icon"></i>
   </button>
 </ion-header-bar>
 <ion-content>
   <ion-list>
-    <ion-item ng-repeat="task in tasks" class="item-icon-right"
-              ng-class="{complete: task.completed}"
-              ng-click="completionChanged(task)">
+    <ion-item ng-repeat="report in report" class="item-icon-right"
+              ng-class="{complete: report.completed}"
+              ng-click="completionChanged(report)">
       <i class="icon ion-ios7-arrow-left"></i>
-      {{task.title}}
-      <ion-option-button class="button-energized" ng-click="editTitle(task)">
+      {{report.title}}
+      <ion-option-button class="button-energized" ng-click="editReport(report)">
         Edit
       </ion-option-button>
-      <ion-option-button class="button-assertive" ng-click="delete(task)">
+      <ion-option-button class="button-assertive" ng-click="delete(report)">
         Delete
       </ion-option-button>
     </ion-item>
   </ion-list>
 </ion-content>
 
-<script id="new-task.html" type="text/ng-template">
+<script id="new-report.html" type="text/ng-template">
   <div class="modal">
     <!-- Modal header bar -->
     <ion-header-bar class="bar-secondary">
       <h1 class="title">New Report</h1>
-      <button class="button button-clear button-positive" ng-click="closeNewTask()">Cancel</button>
+      <button class="button button-clear button-positive" ng-click="closeNewReport()">Cancel</button>
     </ion-header-bar>
 
     <!-- Modal content area -->
     <ion-content>
-      <form ng-submit="createTask(task)">
-        <input type="hidden" ng-model="task.mentorid" value="{{mentor.id}}">
-        <input type="hidden" ng-model="task.mentor" value="{{mentor.name}}">
+      <form ng-submit="createReport(report)">
+        <input type="hidden" ng-model="report.mentorid" value="{{mentor.id}}">
+        <input type="hidden" ng-model="report.mentor" value="{{mentor.name}}">
         <div class="list">
           <label class="item item-input">
-            <input type="text" placeholder="Any Notes?" ng-model="task.title">
+            <input type="text" placeholder="Any Notes?" ng-model="report.title">
           </label>
           <div class="item item-divider">
-            Protocol: {{task.protocol}}
+            Protocol: {{report.protocol}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "task.protocol" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model= "report.protocol" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
-            Social Acument: {{task.social}}
+            Social Acument: {{report.social}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "task.social" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model= "report.social" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
-            Small Vehicle Search: {{task.small}}
+            Small Vehicle Search: {{report.small}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "task.small" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model= "report.small" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
-            Large Vehicle Search: {{task.large}}
+            Large Vehicle Search: {{report.large}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "task.large" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model= "report.large" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
-            Lane Safety: {{task.safety}}
+            Lane Safety: {{report.safety}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "task.safety" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model= "report.safety" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
-            Theater: {{task.theater}}
+            Theater: {{report.theater}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "task.theater" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model= "report.theater" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
-            Follows Direction: {{task.direction}}
+            Follows Direction: {{report.direction}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "task.direction" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model= "report.direction" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
         </div>
