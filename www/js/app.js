@@ -15,7 +15,7 @@ angular.module('reporting', ['ionic'])
     $scope.reports = [];
 
     $scope.mentor = window.localStorage['mentor'] || 'Not You';
-    $scope.newb= "undefined";
+    $scope.newb = "undefined";
 
     $http.get('mentors.json').success(function (data) {
         $scope.mentors = data;
@@ -111,21 +111,26 @@ angular.module('reporting', ['ionic'])
       scope: $scope
     });
 
-    $scope.createReport = function(report) {
-      report.completed = false;
-      report.timestamp = Math.round(+new Date()/1000);
-      report.millitimestamp = Date();
-      report.mentor=$scope.mentor;
-      report.newb=$scope.newb;
-      reportDb.post(angular.copy(report), function(err, res) {
+    $scope.createReport = function(r) {
+
+      r.timestamp = Math.round(+new Date()/1000);
+      r.millitimestamp = Date.now();
+      r.mentor = $scope.mentor;
+      r.newb = $scope.newb;
+      r.protocol = typeof r.protocol !== 'undefined' ? report.protocol : 5;
+      r.social = typeof r.social !== 'undefined' ? r.social : 5;
+      r.small = typeof r.small !== 'undefined' ? r.small : 5;
+      r.large = typeof r.large !== 'undefined' ? r.large : 5;
+      r.safety = typeof r.safety !== 'undefined' ? r.safety : 5;
+      r.theater = typeof r.theater !== 'undefined' ? r.theater : 5;
+      r.direction = typeof r.direction !== 'undefined' ? r.direction : 5;
+
+      reportDb.post(angular.copy(r), function(err, res) {
         if (err) console.log(err)
 
         if (res) console.log(res);
       });
-
-
       $scope.reportModal.hide();
-      $scope.reportModal=undefined;
       // Create our report modal
       $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
         $scope.reportModal = modal;
@@ -139,11 +144,6 @@ angular.module('reporting', ['ionic'])
       $score.reportModal.show();
     }
 
-    $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
-      $scope.reportModal = modal;
-    }, {
-      scope: $scope
-    });
 
     $scope.newReport = function(newb) {
 
@@ -157,7 +157,6 @@ angular.module('reporting', ['ionic'])
 
     $scope.closeNewReport = function() {
       $scope.reportModal.hide();
-      $scope.reportModal.destroy();
       // Create our report modal
       $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
         $scope.reportModal = modal;
@@ -226,6 +225,4 @@ angular.module('reporting', ['ionic'])
       });
       return results;
     }
-
-
   });
