@@ -108,12 +108,13 @@ angular.module('reporting', ['ionic'])
     //   });
     // };
 
-    // Create our modal
-    $ionicModal.fromTemplateUrl('mentor-list.html', function(modal) {
-      $scope.mentorModal = modal;
+    // Create our report modal
+    $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
+      $scope.reportModal = modal;
     }, {
       scope: $scope
     });
+
 
     $scope.createReport = function(report) {
       report.completed = false;
@@ -139,8 +140,8 @@ angular.module('reporting', ['ionic'])
     };
 
     // Create our mentors modal
-    $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
-      $scope.reportModal = modal;
+    $ionicModal.fromTemplateUrl('mentor-list.html', function(modal) {
+      $scope.mentorModal = modal;
     }, {
       scope: $scope
     });
@@ -154,7 +155,7 @@ angular.module('reporting', ['ionic'])
     $scope.selectMentor = function(mentor){
       console.log(mentor);
       $scope.mentor = mentor;
-      $scope.reportModal.hide();
+      $scope.mentorModal.hide();
     }
 
 
