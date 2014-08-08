@@ -13,7 +13,9 @@ angular.module('reporting', ['ionic'])
   .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate) {
     // Initialize reports
     $scope.reports = [];
-    $scope.mentor = "Not You"
+
+    $scope.mentor = window.localStorage['mentor'] || 'Not You';
+    $scope.newb= "undefined";
 
     $http.get('mentors.json').success(function (data) {
         $scope.mentors = data;
@@ -30,12 +32,6 @@ angular.module('reporting', ['ionic'])
         console.log("Syncing stopped");
         console.log(err);
       });
-
-
-    $scope.completionChanged = function(report) {
-      report.completed = !report.completed;
-      $scope.update(report);
-    };
 
     reportDb.changes({
       live: true,
@@ -115,15 +111,27 @@ angular.module('reporting', ['ionic'])
       scope: $scope
     });
 
-
     $scope.createReport = function(report) {
       report.completed = false;
       report.timestamp = Math.round(+new Date()/1000);
+      report.millitimestamp = Date();
+      report.mentor=$scope.mentor;
+      report.newb=$scope.newb;
       reportDb.post(angular.copy(report), function(err, res) {
         if (err) console.log(err)
-        report.title = "";
+
+        if (res) console.log(res);
       });
+
+
       $scope.reportModal.hide();
+      $scope.reportModal=undefined;
+      // Create our report modal
+      $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
+        $scope.reportModal = modal;
+      }, {
+        scope: $scope
+      });
     };
 
     $scope.editReport = function(report) {
@@ -131,19 +139,38 @@ angular.module('reporting', ['ionic'])
       $score.reportModal.show();
     }
 
-    $scope.newReport = function() {
+    $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
+      $scope.reportModal = modal;
+    }, {
+      scope: $scope
+    });
+
+    $scope.newReport = function(newb) {
+
       if ($scope.mentor == "Not You") {
         $scope.mentorModal.show();
       }else{
+        $scope.newb=newb;
         $scope.reportModal.show();
       }
     };
 
     $scope.closeNewReport = function() {
       $scope.reportModal.hide();
+      $scope.reportModal.destroy();
+      // Create our report modal
+      $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
+        $scope.reportModal = modal;
+      }, {
+        scope: $scope
+      });
     };
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.reportModal.remove();
+    });
 
-    // Create our mentors modal
+    // Create our mentor modal
     $ionicModal.fromTemplateUrl('mentor-list.html', function(modal) {
       $scope.mentorModal = modal;
     }, {
@@ -157,9 +184,47 @@ angular.module('reporting', ['ionic'])
       $scope.mentorModal.hide();
     }
     $scope.selectMentor = function(mentor){
-      console.log(mentor);
       $scope.mentor = mentor;
+      window.localStorage['mentor'] = mentor;
       $scope.mentorModal.hide();
+    }
+
+    // Create our report modal
+    $ionicModal.fromTemplateUrl('report-list.html', function(modal) {
+      $scope.reportListModal = modal;
+
+    }, {
+      scope: $scope
+    });
+
+    $scope.showReportList = function(){
+      $scope.myReports();
+      $scope.reportListModal.show();
+    }
+    $scope.hideReportList = function(){
+      $scope.my_reports=[];
+      $scope.reportListModal.hide();
+    }
+
+    $scope.myReports = function(){
+      var results;
+      function map(doc){
+        if (doc.mentor==$scope.mentor) {
+          emit(doc);
+        }
+      }
+
+      reportDb.query({map: map},{reduce: false},function(err,response){
+        if (err) {
+          console.log(err);
+        }
+        if (response) {
+          console.log(response);
+          results = response;
+          $scope.my_reports = results;
+        }
+      });
+      return results;
     }
 
 

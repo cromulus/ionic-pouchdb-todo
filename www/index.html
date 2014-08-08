@@ -23,32 +23,42 @@
 <body ng-app="reporting" ng-controller="reportCtrl">
 <ion-header-bar class="bar-positive">
   <h1 class="title" ng-click="showMentors()">{{mentor}}</h1>
-  <!-- ########################################### -->
-  <!-- ###    Add button for online toggle     ### -->
-  <!-- ########################################### -->
-  <button class="button button-icon" ng-click="toggleOnline()">
-    <i class="icon" ng-class="{'ion-connection-bars' : online, 'ion-alert-circled' : !online}"></i>
-  </button>
-  <button class="button button-icon" ng-click="newReport()">
+  <button class="button button-icon" ng-click="showReportList()">
     <i class="ion-compose icon"></i>
   </button>
 </ion-header-bar>
 <ion-content>
   <ion-list>
-    <ion-item ng-repeat="report in report" class="item-icon-right"
-              ng-class="{complete: report.completed}"
-              ng-click="editReport(report)">
-      <i class="icon ion-ios7-arrow-left"></i>
-      {{report.title}}
-      <ion-option-button class="button-energized" ng-click="editReport(report)">
-        Edit
-      </ion-option-button>
-      <ion-option-button class="button-assertive" ng-click="delete(report)">
-        Delete
-      </ion-option-button>
+    <ion-item ng-repeat="newb in newbs | orderBy:name" class="item-icon-right"
+              ng-click="newReport(newb)">
+      {{newb}}
     </ion-item>
   </ion-list>
 </ion-content>
+
+<script id="report-list.html" type="text/ng-template">
+  <div class="modal">
+    <ion-header-bar class="bar-secondary">
+      <h1 class="title">Your Reports</h1>
+      <button class="button button-clear button-positive" ng-click="hideReportList()">Cancel</button>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <ion-item ng-repeat="report in my_reports| orderBy:timestamp:true" class="item-icon-right"
+                  ng-click="editReport(report)">
+          <i class="icon ion-ios7-arrow-left"></i>
+          {{report.newb}} | {{report.millitimestamp | date:'MM/dd @ h:mma'}}
+          <ion-option-button class="button-energized" ng-click="editReport(report)">
+            Edit
+          </ion-option-button>
+          <ion-option-button class="button-assertive" ng-click="delete(report)">
+            Delete
+          </ion-option-button>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </div>
+</script>
 
 <script id="mentor-list.html" type="text/ng-template">
   <div class="modal">
@@ -71,15 +81,16 @@
   <div class="modal">
     <!-- Modal header bar -->
     <ion-header-bar class="bar-secondary">
-      <h1 class="title">New Report</h1>
+      <h1 class="title">Report: {{newb}}</h1>
       <button class="button button-clear button-positive" ng-click="closeNewReport()">Cancel</button>
     </ion-header-bar>
 
     <!-- Modal content area -->
     <ion-content>
       <form ng-submit="createReport(report)">
-        <input type="hidden" ng-model="report.mentorid" value="{{mentor.id}}">
-        <input type="hidden" ng-model="report.mentor" value="{{mentor.name}}">
+
+        <input type="hidden" ng-model="report.mentor" value="{{mentor}}">
+        <input type="hidden" ng-model="report.newb" value="{{newb}}">
         <div class="list">
           <label class="item item-input">
             <input type="text" placeholder="Any Notes?" ng-model="report.title">
@@ -89,7 +100,7 @@
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "report.protocol" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model="report.protocol" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
@@ -97,7 +108,7 @@
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model= "report.social" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-model="report.social" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">
