@@ -35,11 +35,13 @@
     </ion-item>
   </ion-list>
 </ion-content>
-
+<ion-footer-bar class="bar-positive">
+  <h1 class="title">Total Reports:{{report_count}} Synced:{{synced}}</h1>
+</ion-header-bar>
 <script id="report-list.html" type="text/ng-template">
   <div class="modal">
     <ion-header-bar class="bar-secondary">
-      <h1 class="title">Your Reports</h1>
+      <h1 class="title">Your Reports: {{my_reports.length}}</h1>
       <button class="button button-clear button-positive" ng-click="hideReportList()">Cancel</button>
     </ion-header-bar>
     <ion-content>
@@ -65,7 +67,7 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item ng-repeat="mentor in mentors" class="item-icon-right"
+        <ion-item ng-repeat="mentor in mentors | orderBy:mentor:true" class="item-icon-right"
                 ng-click="selectMentor(mentor)">
                 {{mentor}}
         </ion-item>
