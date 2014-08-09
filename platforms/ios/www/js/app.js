@@ -4,16 +4,14 @@ angular.module('reporting', ['ionic'])
     var db = new PouchDB('reports');
     return db;
   })
-  // .factory('mentorList',function(){
-  //   return $http.get('/mentors.json');
-  // })
-  // .factory('newbList',function(){
-  //   return $http.get('/newbs.json');
-  // })
+  // indexedDB.deleteDatabase('_pouch_reports');
+  // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
+
   .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate) {
     // Initialize reports
     $scope.reports = [];
     $scope.my_reports = [];
+    $scope.synced=false;
     $scope.mentor = window.localStorage['mentor'] || 'Not You';
     $scope.newb = "undefined";
 
@@ -24,6 +22,20 @@ angular.module('reporting', ['ionic'])
         $scope.newbs = data;
     });
 
+    //initializing the report
+    var report_props = ['report.protocol',
+                        'report.social',
+                        'report.small',
+                        'report.large',
+                        'report.safety',
+                        'report.theater',
+                        'report.direction'];
+    for (var i = 0; i < report_props.length; i++) {
+      $scope.$watch(report_props[i], function() {
+        // where we would put an unblur
+      });
+    }
+
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
@@ -32,10 +44,26 @@ angular.module('reporting', ['ionic'])
         console.log("Syncing stopped");
         console.log(err);
       });
+    $scope.sync.on('complete', function (info) {
+      $scope.synced = false;
+      console.log("not synced");
+      console.log(info);
+    }).on('uptodate', function (info) {
+      $scope.synced = true;
+      console.log("synced!");
+      console.log(info);
+      $scope.last_sync=Date.now()
+    }).on('change',function(info){
+      console.log(info);
+    })
 
     reportDb.changes({
       live: true,
       onChange: function (change) {
+        reportDb.info(function(err,resp){
+          $scope.report_count=resp.doc_count;
+        });
+
         if (!change.deleted) {
           reportDb.get(change.id, function(err, doc) {
             if (err) console.log(err);
@@ -76,11 +104,12 @@ angular.module('reporting', ['ionic'])
     $scope.delete = function(report) {
       console.log('deleting');
       console.log(report);
-      $scope.my_reports.splice( $scope.my_reports.indexOf(report), 1 );
+
       reportDb.get(report._id, function (err, doc) {
         reportDb.remove(doc, function (err, res) {});
       });
-
+      $scope.my_reports.splice( $scope.my_reports.indexOf(report), 1 );
+      console.log($scope.my_reports);
     };
 
     // Create our report modal
@@ -116,19 +145,6 @@ angular.module('reporting', ['ionic'])
       });
     };
 
-    var report_props = ['report.protocol',
-                        'report.social',
-                        'report.small',
-                        'report.large',
-                        'report.safety',
-                        'report.theater',
-                        'report.direction'];
-    for (var i = 0; i < report_props.length; i++) {
-      $scope.$watch(report_props[i], function() {
-        console.log('changed!');
-      });
-
-    }
 
     $scope.editReport = function(this_report) {
       $scope.report=this_report;
@@ -228,7 +244,7 @@ angular.module('reporting', ['ionic'])
         //   }
         // }
       });
-      console.log($scope.my_reports);
+
 
     }
     $scope.closeKeyboard=function(){
