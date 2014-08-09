@@ -37,22 +37,22 @@ angular.module('reporting', ['ionic'])
 
 
 
-    $http.get('http://cromie.org/mentors.json').success(function(data) {
-        $scope.mentors = data;
-    }).error(function(){
+    // $http.get('http://cromie.org/mentors.json').success(function(data) {
+    //     $scope.mentors = data;
+    // }).error(function(){
       $http.get('/mentors.json').success(function (data) {
           $scope.mentors = data;
       });
-    });
+    //});
 
-    $http.get('http://cromie.org/newbs.json').success(function (data) {
-        $scope.newbs = data;
-    }).error(function(){
+    // $http.get('http://cromie.org/newbs.json').success(function (data) {
+    //     $scope.newbs = data;
+    // }).error(function(){
       $http.get('newbs.json').success(function (data) {
         $scope.newbs = data;
         console.log(data);
       })
-    });
+    // });
     console.log($scope.newbs);
     //initializing the report
     var report_props = ['report.protocol',
@@ -186,7 +186,7 @@ angular.module('reporting', ['ionic'])
 
     $scope.newReport = function(newb) {
 
-      if ($scope.mentor == "Not You") {
+      if ($scope.mentor.id == "0") {
         $scope.mentorModal.show();
       }else{
         $scope.newb=newb;

@@ -23,7 +23,7 @@
 <body ng-app="reporting" ng-controller="reportCtrl" class="platform-android platform-cordova platform-webview">
 <ion-header-bar class="bar-positive">
   <button class="button">{{report_count}}</button>
-  <h1 class="title" ng-click="showMentors()">{{mentor}}</h1>
+  <h1 class="title" ng-click="showMentors()">{{mentor.name}}</h1>
   <button class="button button-icon" ng-click="showReportList()">
     <i class="ion-compose icon"></i>
   </button>
@@ -53,7 +53,7 @@
         <ion-item ng-repeat="report in my_reports track by $index | orderBy:'timestamp':true " class="item-icon-right"
                   ng-click="editReport(report)">
           <i class="icon ion-ios7-arrow-left"></i>
-          {{report.newb}} | {{report.millitimestamp | date:'MM/dd @ h:mma'}}
+          {{report.newb.name}} | {{report.millitimestamp | date:'MM/dd @ h:mma'}}
           <ion-option-button class="button-assertive" ng-click="delete(report)">
             Delete
           </ion-option-button>
@@ -84,7 +84,7 @@
   <div class="modal">
     <!-- Modal header bar -->
     <ion-header-bar class="bar-secondary">
-      <h1 class="title">Report: {{newb}}</h1>
+      <h1 class="title">Report: {{newb.name}}</h1>
       <button class="button button-clear button-positive" ng-click="closeNewReport()">Cancel</button>
     </ion-header-bar>
 
