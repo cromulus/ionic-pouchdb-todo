@@ -36,7 +36,10 @@
   </ion-list>
 </ion-content>
 <ion-footer-bar class="bar-positive">
-  <h1 class="title">Total Reports:{{report_count}} Synced:{{synced}}</h1>
+  <h1 class="title">Total Reports:{{report_count}}</h1>
+  <button class="button button-icon" ng-click="">
+    <i class="icon" ng-class="{'ion-connection-bars' : synced, 'ion-alert-circled' : !synced}"></i>
+  </button>
 </ion-header-bar>
 <script id="report-list.html" type="text/ng-template">
   <div class="modal">

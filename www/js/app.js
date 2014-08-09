@@ -43,7 +43,12 @@ angular.module('reporting', ['ionic'])
       .on('error', function (err) {
         console.log("Syncing stopped");
         console.log(err);
-      });1
+      });
+    $scope.sync.on('complete', function (info) {
+      $scope.synced = false;
+    }).on('uptodate', function (info) {
+      $scope.synced = true;
+    })
 
     reportDb.changes({
       live: true,
@@ -51,12 +56,6 @@ angular.module('reporting', ['ionic'])
         reportDb.info(function(err,resp){
           $scope.report_count=resp.doc_count;
         });
-        if (change.complete){
-          $scope.synced = false;
-        }
-        if (change.uptodate) {
-          $scope.synced = true;
-        }
 
         if (!change.deleted) {
           reportDb.get(change.id, function(err, doc) {
