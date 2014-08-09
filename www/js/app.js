@@ -40,8 +40,9 @@ angular.module('reporting', ['ionic'])
     // $http.get('http://cromie.org/mentors.json').success(function(data) {
     //     $scope.mentors = data;
     // }).error(function(){
-      $http.get('/mentors.json').success(function (data) {
+      $http.get('mentors.json').success(function (data) {
           $scope.mentors = data;
+          console.log("getting the mentor data");
       });
     //});
 

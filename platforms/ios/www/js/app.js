@@ -42,6 +42,7 @@ angular.module('reporting', ['ionic'])
     // }).error(function(){
       $http.get('/mentors.json').success(function (data) {
           $scope.mentors = data;
+          console.log("getting the mentor data");
       });
     //});
 
@@ -186,7 +187,7 @@ angular.module('reporting', ['ionic'])
 
     $scope.newReport = function(newb) {
 
-      if ($scope.mentor == "Not You") {
+      if ($scope.mentor.id == "0") {
         $scope.mentorModal.show();
       }else{
         $scope.newb=newb;
