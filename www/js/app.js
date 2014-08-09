@@ -17,13 +17,25 @@ angular.module('reporting', ['ionic'])
     $scope.last_sync = window.localStorage['last_sync'] || 0;
     $scope.newb = "undefined";
 
-    $http.get('mentors.json').success(function (data) {
+
+
+    $http.get('http://cromie.org/mentors.json').success(function(data) {
         $scope.mentors = data;
-    });
-    $http.get('newbs.json').success(function (data) {
-        $scope.newbs = data;
+    }).error(function(){
+      $http.get('/mentors.json').success(function (data) {
+          $scope.mentors = data;
+      });
     });
 
+    $http.get('http://cromie.org/newbs.json').success(function (data) {
+        $scope.newbs = data;
+    }).error(function(){
+      $http.get('newbs.json').success(function (data) {
+        $scope.newbs = data;
+        console.log(data);
+      })
+    });
+    console.log($scope.newbs);
     //initializing the report
     var report_props = ['report.protocol',
                         'report.social',
@@ -48,12 +60,9 @@ angular.module('reporting', ['ionic'])
       });
     $scope.sync.on('complete', function (info) {
       $scope.synced = false;
-      console.log("not synced");
-      console.log(info);
+
     }).on('uptodate', function (info) {
       $scope.synced = true;
-      console.log("synced!");
-      console.log(info);
       $scope.last_sync=Date.now();
       window.localStorage['last_sync']=$scope.last_sync;
     }).on('change',function(info){
@@ -128,9 +137,10 @@ angular.module('reporting', ['ionic'])
       }
       r.timestamp = Math.round(+new Date()/1000);
       r.millitimestamp = Date.now();
-      r.mentor = $scope.mentor;
-      r.newb = $scope.newb;
-
+      r.mentor_id=$scope.mentor.id
+      r.mentor = $scope.mentor.name;
+      r.newb = $scope.newb.name;
+      r.newb_id=$scope.newb.id;
       reportDb.post(angular.copy(r), function(err, res) {
         if (err) console.log(err)
 
@@ -232,23 +242,14 @@ angular.module('reporting', ['ionic'])
         $scope.$apply(function() { //UPDATE
 
           for (var i = 0; i < response.rows.length; i++) {
-            console.log(response.rows[i].doc._id);
             if ($scope.mentor === response.rows[i].doc.mentor) {
-              $scope.my_reports[i] = response.rows[i].doc;
+              console.log(response.rows[i].doc);
+              $scope.my_reports.push(response.rows[i].doc);
             }
-          } // CREATE / READ
-          // $scope.my_reports.push(doc);
+          }
+          console.log($scope.my_reports);
         });
-        //
-        // for (var i = 0; i < response.rows.length; i++) {
-        //   console.log(response.row[i]);
-        //   if (response.rows[i].name == $scope.mentor) {
-        //     $scope.my_reports.push(response.rows.rows[i])
-        //   }
-        // }
       });
-
-
     }
     $scope.closeKeyboard=function(){
       cordova.plugins.Keyboard.close();

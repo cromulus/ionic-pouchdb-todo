@@ -11,8 +11,10 @@ angular.module('reporting', ['ionic'])
     // Initialize reports
     $scope.reports = [];
     $scope.my_reports = [];
-    $scope.synced=false;
+    $scope.synced = false;
+    $scope.total_reports = 0;
     $scope.mentor = window.localStorage['mentor'] || 'Not You';
+    $scope.last_sync = window.localStorage['last_sync'] || 0;
     $scope.newb = "undefined";
 
     $http.get('mentors.json').success(function (data) {
@@ -52,7 +54,8 @@ angular.module('reporting', ['ionic'])
       $scope.synced = true;
       console.log("synced!");
       console.log(info);
-      $scope.last_sync=Date.now()
+      $scope.last_sync=Date.now();
+      window.localStorage['last_sync']=$scope.last_sync;
     }).on('change',function(info){
       console.log(info);
     })

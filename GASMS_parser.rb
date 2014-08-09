@@ -10,7 +10,7 @@ mentor_lead="303"
 lane_mentor="322"
 
 people={}
-newbs,mentors,vets = {},{},{}
+newbs,mentors,vets = [],[],[]
 people[:newbs]=newbs
 people[:vets]=vets
 people[:mentors]=mentors
@@ -52,22 +52,23 @@ shifts["availshifts"].each{|k,v|
   v.each{|k,v|
     case v['roleid']
     when train_new
-      newbs[v['userid']] = users[v["userid"]]
+      newbs.push({:name=>users[v["userid"]],:id=>v['userid']})
     when mentor
-      mentors[v['userid']] = users[v["userid"]]
+      mentors.push({:name=>users[v["userid"]],:id=>v['userid']})
     when mentor_lead
-      mentors[v['userid']] = users[v["userid"]]
+      mentors.push({:name=>users[v["userid"]],:id=>v['userid']})
     when lane_mentor
-      mentors[v['userid']] = users[v["userid"]]
+      mentors.push({:name=>users[v["userid"]],:id=>v['userid']})
     when train_refresh
-      vets[v['userid']] = users[v["userid"]]
+      vets.push({:name=>users[v["userid"]],:id=>v['userid']})
     end
   }
 }
-newbs.delete_if {|k, v| v.nil? || k.nil? }
-mentors.delete_if {|k, v| v.nil? || k.nil? }
-vets.delete_if {|k, v| v.nil? || k.nil? }
-
+newbs.delete_if {|k| k[:name].nil? || k[:id].nil? }
+mentors.delete_if {|k| k[:name].nil? || k[:id].nil? }
+vets.delete_if {|k| k[:name].nil? || k[:id].nil? }
+newbs.uniq!
+mentors.uniq!
 newb_json=JSON.generate(newbs)
 mentor_json=JSON.generate(mentors)
 
