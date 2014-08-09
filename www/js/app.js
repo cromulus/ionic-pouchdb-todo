@@ -13,7 +13,7 @@ angular.module('reporting', ['ionic'])
   .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate) {
     // Initialize reports
     $scope.reports = [];
-
+    $scope.my_reports = [];
     $scope.mentor = window.localStorage['mentor'] || 'Not You';
     $scope.newb = "undefined";
 
@@ -209,23 +209,16 @@ angular.module('reporting', ['ionic'])
     }
 
     $scope.myReports = function(){
-      var results;
-      function map(doc){
-        if (doc.mentor==$scope.mentor) {
-          emit(doc);
-        }
-      }
-
-      reportDb.query({map: map},{reduce: false},function(err,response){
-        if (err) {
-          console.log(err);
-        }
-        if (response) {
-          console.log(response);
-          results = response;
-          $scope.my_reports = results;
+      $scope.my_reports=[];
+      reportDb.allDocs({include_docs: true},function(err, response){
+        rows=response.rows
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].name == $scope.mentor) {
+            $scope.my_reports.push(rows[i])
+          }
         }
       });
-      return results;
+      console.log($scope.my_reports);
+
     }
   });
