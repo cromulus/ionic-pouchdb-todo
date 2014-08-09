@@ -46,8 +46,15 @@ angular.module('reporting', ['ionic'])
       });
     $scope.sync.on('complete', function (info) {
       $scope.synced = false;
+      console.log("not synced");
+      console.log(info);
     }).on('uptodate', function (info) {
       $scope.synced = true;
+      console.log("synced!");
+      console.log(info);
+      $scope.last_sync=Date.now()
+    }).on('change',function(info){
+      console.log(info);
     })
 
     reportDb.changes({
