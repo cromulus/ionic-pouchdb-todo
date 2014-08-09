@@ -84,10 +84,6 @@
 
     <!-- Modal content area -->
     <ion-content>
-      <form ng-submit="createReport(report)">
-
-        <input type="hidden" ng-model="report.mentor" value="{{mentor}}">
-        <input type="hidden" ng-model="report.newb" value="{{newb}}">
         <div class="list">
           <label class="item item-input">
             <input type="text" placeholder="Any Notes?" ng-model="report.note">
@@ -150,9 +146,8 @@
           </div>
         </div>
         <div class="padding">
-          <button type="submit" class="button button-block button-positive">Save Report</button>
+          <button type="" ng-click="createReport(report)" class="button button-block button-positive">Save Report</button>
         </div>
-      </form>
     </ion-content>
   </div>
 

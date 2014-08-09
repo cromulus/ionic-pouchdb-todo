@@ -116,6 +116,20 @@ angular.module('reporting', ['ionic'])
       });
     };
 
+    var report_props = ['report.protocol',
+                        'report.social',
+                        'report.small',
+                        'report.large',
+                        'report.safety',
+                        'report.theater',
+                        'report.direction'];
+    for (var i = 0; i < report_props.length; i++) {
+      $scope.$watch(report_props[i], function() {
+        console.log('changed!');
+      });
+
+    }
+    
     $scope.editReport = function(this_report) {
       $scope.report=this_report;
       $scope.newb=this_report.newb;
