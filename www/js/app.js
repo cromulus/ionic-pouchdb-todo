@@ -74,35 +74,14 @@ angular.module('reporting', ['ionic'])
     };
 
     $scope.delete = function(report) {
+      console.log('deleting');
+      console.log(report);
+      $scope.my_reports.splice( $scope.my_reports.indexOf(report), 1 );
       reportDb.get(report._id, function (err, doc) {
         reportDb.remove(doc, function (err, res) {});
       });
-    };
 
-    // $scope.editReport = function (report) {
-    //   var scope = $scope.$new(true);
-    //   scope.data = { response: report.title } ;
-    //   $ionicPopup.prompt({
-    //     title: 'Edit report:',
-    //     scope: scope,
-    //     buttons: [
-    //       { text: 'Cancel',  onTap: function(e) { return false; } },
-    //       {
-    //         text: '<b>Save</b>',
-    //         type: 'button-positive',
-    //         onTap: function(e) {
-    //           return scope.data.response
-    //         }
-    //       },
-    //     ]
-    //   }).then(function (newTitle) {
-    //     if (newTitle && newTitle != report.title) {
-    //       report.title = newTitle;
-    //       $scope.update(report);
-    //     }
-    //     $ionicListDelegate.closeOptionButtons();
-    //   });
-    // };
+    };
 
     // Create our report modal
     $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
@@ -112,7 +91,9 @@ angular.module('reporting', ['ionic'])
     });
 
     $scope.createReport = function(r) {
+      if (typeof(r._id!=="undefined")) {
 
+      }
       r.timestamp = Math.round(+new Date()/1000);
       r.millitimestamp = Date.now();
       r.mentor = $scope.mentor;
@@ -123,6 +104,9 @@ angular.module('reporting', ['ionic'])
 
         if (res) console.log(res);
       });
+
+      $scope.newb = undefined; // unset the newb
+
       $scope.reportModal.hide();
       // Create our report modal
       $ionicModal.fromTemplateUrl('new-report.html', function(modal) {
@@ -132,9 +116,10 @@ angular.module('reporting', ['ionic'])
       });
     };
 
-    $scope.editReport = function(report) {
-      $scope.this_report=report;
-      $score.reportModal.show();
+    $scope.editReport = function(this_report) {
+      $scope.report=this_report;
+      $scope.newb=this_report.newb;
+      $scope.reportModal.show();
     }
 
 
@@ -211,12 +196,23 @@ angular.module('reporting', ['ionic'])
     $scope.myReports = function(){
       $scope.my_reports=[];
       reportDb.allDocs({include_docs: true},function(err, response){
-        rows=response.rows
-        for (var i = 0; i < rows.length; i++) {
-          if (rows[i].name == $scope.mentor) {
-            $scope.my_reports.push(rows[i])
-          }
-        }
+        $scope.$apply(function() { //UPDATE
+
+          for (var i = 0; i < response.rows.length; i++) {
+            console.log(response.rows[i].doc._id);
+            if ($scope.mentor === response.rows[i].doc.mentor) {
+              $scope.my_reports[i] = response.rows[i].doc;
+            }
+          } // CREATE / READ
+          // $scope.my_reports.push(doc);
+        });
+        //
+        // for (var i = 0; i < response.rows.length; i++) {
+        //   console.log(response.row[i]);
+        //   if (response.rows[i].name == $scope.mentor) {
+        //     $scope.my_reports.push(response.rows.rows[i])
+        //   }
+        // }
       });
       console.log($scope.my_reports);
 

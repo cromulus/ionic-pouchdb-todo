@@ -44,13 +44,10 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item ng-repeat="report in my_reports| orderBy:timestamp:true" class="item-icon-right"
+        <ion-item ng-repeat="report in my_reports track by $index | orderBy:timestamp:true " class="item-icon-right"
                   ng-click="editReport(report)">
           <i class="icon ion-ios7-arrow-left"></i>
           {{report.newb}} | {{report.millitimestamp | date:'MM/dd @ h:mma'}}
-          <ion-option-button class="button-energized" ng-click="editReport(report)">
-            Edit
-          </ion-option-button>
           <ion-option-button class="button-assertive" ng-click="delete(report)">
             Delete
           </ion-option-button>
