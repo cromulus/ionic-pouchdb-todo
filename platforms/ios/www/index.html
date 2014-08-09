@@ -22,6 +22,7 @@
 
 <body ng-app="reporting" ng-controller="reportCtrl" class="platform-ios platform-cordova platform-webview">
 <ion-header-bar class="bar-positive">
+  <button class="button">{{report_count}}</button>
   <h1 class="title" ng-click="showMentors()">{{mentor}}</h1>
   <button class="button button-icon" ng-click="showReportList()">
     <i class="ion-compose icon"></i>
@@ -29,14 +30,14 @@
 </ion-header-bar>
 <ion-content>
   <ion-list>
-    <ion-item ng-repeat="newb in newbs | orderBy:name" class="item-icon-right"
+    <ion-item ng-repeat="newb in newbs | orderBy:'name'" class="item-icon-right"
               ng-click="newReport(newb)">
-      {{newb}}
+      {{newb.name}}
     </ion-item>
   </ion-list>
 </ion-content>
 <ion-footer-bar class="bar-positive">
-  <h1 class="title">Total Reports:{{report_count}} | Sync@{{last_sync | date:'M/dd h:mma'}}</h1>
+  <h1 class="title">Synced @ {{last_sync | date:'M/dd h:mma'}}</h1>
   <button class="button button-icon" ng-click="">
     <i class="icon" ng-class="{'ion-connection-bars' : synced, 'ion-alert-circled' : !synced}"></i>
   </button>
@@ -49,7 +50,7 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item ng-repeat="report in my_reports track by $index | orderBy:timestamp:true " class="item-icon-right"
+        <ion-item ng-repeat="report in my_reports track by $index | orderBy:'timestamp':true " class="item-icon-right"
                   ng-click="editReport(report)">
           <i class="icon ion-ios7-arrow-left"></i>
           {{report.newb}} | {{report.millitimestamp | date:'MM/dd @ h:mma'}}
@@ -70,9 +71,9 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item ng-repeat="mentor in mentors | orderBy:mentor:true" class="item-icon-right"
+        <ion-item ng-repeat="mentor in mentors | orderBy:'name'" class="item-icon-right"
                 ng-click="selectMentor(mentor)">
-                {{mentor}}
+                {{mentor.name}}
         </ion-item>
       </ion-list>
     </ion-content>

@@ -1,20 +1,38 @@
+
 angular.module('reporting', ['ionic'])
   // Simple PouchDB factory
   .factory('reportDb', function() {
     var db = new PouchDB('reports');
     return db;
   })
+  .factory('localstorage', ['$window', function($window) {
+    return {
+      set: function(key, value) {
+        $window.localStorage[key] = value;
+      },
+      get: function(key, defaultValue) {
+        return $window.localStorage[key] || defaultValue;
+      },
+      setObject: function(key, value) {
+        $window.localStorage[key] = JSON.stringify(value);
+      },
+      getObject: function(key,defaultObject) {
+        defaultObject = typeof defaultObject !== 'undefined' ? JSON.stringify(defaultObject) : "{}";
+        return JSON.parse($window.localStorage[key] || defaultObject);
+      }
+    }
+  }])
   // indexedDB.deleteDatabase('_pouch_reports');
   // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
 
-  .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate) {
+  .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate,localstorage) {
     // Initialize reports
     $scope.reports = [];
     $scope.my_reports = [];
     $scope.synced = false;
     $scope.total_reports = 0;
-    $scope.mentor = window.localStorage['mentor'] || 'Not You';
-    $scope.last_sync = window.localStorage['last_sync'] || 0;
+    $scope.mentor = localstorage.getObject('mentor',{name:'Not You',id:"0"});
+    $scope.last_sync = localstorage.get('last_sync',0)
     $scope.newb = "undefined";
 
 
@@ -64,7 +82,7 @@ angular.module('reporting', ['ionic'])
     }).on('uptodate', function (info) {
       $scope.synced = true;
       $scope.last_sync=Date.now();
-      window.localStorage['last_sync']=$scope.last_sync;
+      localstorage.set('last_sync',$scope.last_sync);
     }).on('change',function(info){
       console.log(info);
     })
@@ -215,7 +233,7 @@ angular.module('reporting', ['ionic'])
     }
     $scope.selectMentor = function(mentor){
       $scope.mentor = mentor;
-      window.localStorage['mentor'] = mentor;
+      localstorage.setObject('mentor', mentor);
       $scope.mentorModal.hide();
     }
 
@@ -242,7 +260,7 @@ angular.module('reporting', ['ionic'])
         $scope.$apply(function() { //UPDATE
 
           for (var i = 0; i < response.rows.length; i++) {
-            if ($scope.mentor === response.rows[i].doc.mentor) {
+            if ($scope.mentor.id === response.rows[i].doc.mentor.id) {
               console.log(response.rows[i].doc);
               $scope.my_reports.push(response.rows[i].doc);
             }
