@@ -38,6 +38,7 @@
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/lib \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/mentors.json \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/newbs.json \
+/Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/plugins \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/res \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/templates \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/css/app.css \
@@ -55,6 +56,9 @@
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/lib/ionic/js/ionic.bundle.js \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/lib/pouchdb/dist \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/lib/pouchdb/dist/pouchdb-nightly.js \
+/Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/plugins/com.ionic.keyboard \
+/Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/plugins/com.ionic.keyboard/www \
+/Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/plugins/com.ionic.keyboard/www/keyboard.js \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/res/ios \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/res/screens \
 /Users/cromie/Dropbox/projects/burningman_gate_mentor/platforms/android/assets/www/res/ios/icon.png \

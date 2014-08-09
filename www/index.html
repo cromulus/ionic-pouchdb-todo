@@ -86,14 +86,14 @@
     <ion-content>
         <div class="list">
           <label class="item item-input">
-            <input type="text" placeholder="Any Notes?" ng-model="report.note">
+            <textarea placeholder="Performance Notes:" ng-model="report.note"></textarea>
           </label>
           <div class="item item-divider">
             Protocol: {{report.protocol}}
           </div>
           <div class="item range range-positive">
             <span>0</span>
-            <input ng-model="report.protocol" type="range" name="volume" min="0" max="10" value="5">
+            <input ng-click="closeKeyboard()" ng-model="report.protocol" type="range" name="volume" min="0" max="10" value="5">
             <span>10</span>
           </div>
           <div class="item item-divider">

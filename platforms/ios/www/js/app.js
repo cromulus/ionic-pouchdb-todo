@@ -129,7 +129,7 @@ angular.module('reporting', ['ionic'])
       });
 
     }
-    
+
     $scope.editReport = function(this_report) {
       $scope.report=this_report;
       $scope.newb=this_report.newb;
@@ -230,5 +230,8 @@ angular.module('reporting', ['ionic'])
       });
       console.log($scope.my_reports);
 
+    }
+    $scope.closeKeyboard=function(){
+      cordova.plugins.Keyboard.close();
     }
   });
