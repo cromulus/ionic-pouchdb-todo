@@ -33,7 +33,7 @@ angular.module('reporting', ['ionic'])
     $scope.total_reports = 0;
     $scope.mentor = localstorage.getObject('mentor',{name:'Not You',id:"0"});
     $scope.last_sync = localstorage.get('last_sync',0)
-    $scope.newb = "undefined";
+    $scope.newb = undefined;
 
 
 
