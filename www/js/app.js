@@ -71,7 +71,7 @@ angular.module('reporting', ['ionic'])
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
-    $scope.sync = reportDb.sync('http://127.0.0.1:5984/reports', {live: true})
+    $scope.sync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
       .on('error', function (err) {
         console.log("Syncing stopped");
         console.log(err);
@@ -158,7 +158,7 @@ angular.module('reporting', ['ionic'])
       r.mentor_id=$scope.mentor.id
       r.mentor = $scope.mentor.name;
       r.newb = $scope.newb.name;
-      r.newb_id=$scope.newb.id;
+      r.newb_id = $scope.newb.id;
       reportDb.post(angular.copy(r), function(err, res) {
         if (err) console.log(err)
 
@@ -179,7 +179,7 @@ angular.module('reporting', ['ionic'])
 
     $scope.editReport = function(this_report) {
       $scope.report=this_report;
-      $scope.newb=this_report.newb;
+      $scope.newb={name:this_report.newb,id:this_report.newb_id};
       $scope.reportModal.show();
     }
 
