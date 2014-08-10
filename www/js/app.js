@@ -42,7 +42,6 @@ angular.module('reporting', ['ionic'])
     // }).error(function(){
       $http.get('mentors.json').success(function (data) {
           $scope.mentors = data;
-          console.log("getting the mentor data");
       });
     //});
 
@@ -51,10 +50,10 @@ angular.module('reporting', ['ionic'])
     // }).error(function(){
       $http.get('newbs.json').success(function (data) {
         $scope.newbs = data;
-        console.log(data);
+
       })
     // });
-    console.log($scope.newbs);
+
     //initializing the report
     var report_props = ['report.protocol',
                         'report.social',
@@ -187,7 +186,7 @@ angular.module('reporting', ['ionic'])
 
     $scope.newReport = function(newb) {
 
-      if ($scope.mentor.id == "0") {
+      if ($scope.mentor.name == "Not You") {
         $scope.mentorModal.show();
       }else{
         $scope.newb=newb;
@@ -247,8 +246,12 @@ angular.module('reporting', ['ionic'])
     });
 
     $scope.showReportList = function(){
-      $scope.myReports();
-      $scope.reportListModal.show();
+      if ($scope.mentor.name == "Not You") {
+        $scope.mentorModal.show();
+      }else{
+        $scope.myReports();
+        $scope.reportListModal.show();
+      }
     }
     $scope.hideReportList = function(){
       $scope.my_reports=[];
@@ -261,7 +264,7 @@ angular.module('reporting', ['ionic'])
         $scope.$apply(function() { //UPDATE
 
           for (var i = 0; i < response.rows.length; i++) {
-            if ($scope.mentor.id === response.rows[i].doc.mentor.id) {
+            if ($scope.mentor.id == response.rows[i].doc.mentor_id) {
               console.log(response.rows[i].doc);
               $scope.my_reports.push(response.rows[i].doc);
             }

@@ -40,7 +40,7 @@ angular.module('reporting', ['ionic'])
     // $http.get('http://cromie.org/mentors.json').success(function(data) {
     //     $scope.mentors = data;
     // }).error(function(){
-      $http.get('/mentors.json').success(function (data) {
+      $http.get('mentors.json').success(function (data) {
           $scope.mentors = data;
           console.log("getting the mentor data");
       });
@@ -187,7 +187,7 @@ angular.module('reporting', ['ionic'])
 
     $scope.newReport = function(newb) {
 
-      if ($scope.mentor.id == "0") {
+      if ($scope.mentor.name == "Not You") {
         $scope.mentorModal.show();
       }else{
         $scope.newb=newb;
@@ -247,8 +247,12 @@ angular.module('reporting', ['ionic'])
     });
 
     $scope.showReportList = function(){
-      $scope.myReports();
-      $scope.reportListModal.show();
+      if ($scope.mentor.name == "Not You") {
+        $scope.mentorModal.show();
+      }else{
+        $scope.myReports();
+        $scope.reportListModal.show();
+      }
     }
     $scope.hideReportList = function(){
       $scope.my_reports=[];
