@@ -1,4 +1,3 @@
-
 var pouch     = require('pouchdb');
 var mentorDb  = new pouch('mentors');
 var newbDb    = new pouch('newbs');
