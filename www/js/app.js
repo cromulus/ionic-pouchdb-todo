@@ -36,6 +36,19 @@ angular.module('reporting', ['ionic'])
     $scope.newb = undefined;
 
 
+    //checking to see if we are online
+    $scope.online = navigator.onLine;
+    $window.addEventListener("offline", function () {
+      $scope.$apply(function() {
+        $scope.online = false;
+      });
+    }, false);
+    $window.addEventListener("online", function () {
+      $scope.$apply(function() {
+        $scope.online = true;
+      });
+    }, false);
+
 
     // $http.get('http://cromie.org/mentors.json').success(function(data) {
     //     $scope.mentors = data;
