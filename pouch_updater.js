@@ -1,6 +1,7 @@
-#!/usr/bin/env node
-var pouch=require('pouchdb');
-var mentorDb = new PouchDB('mentors');
+
+var pouch     = require('pouchdb');
+var mentorDb  = new pouch('mentors');
+var newbDb    = new pouch('newbs');
 
 mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
   .on('error', function (err) {
