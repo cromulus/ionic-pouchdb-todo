@@ -32,7 +32,8 @@ angular.module('reporting', ['ionic'])
   }])
   // indexedDB.deleteDatabase('_pouch_reports');
   // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
-
+  // indexedDB.deleteDatabase('_pouch_newbs');
+  // indexedDB.deleteDatabase('_pouch_mentors');
   .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb,newbDb,mentorDb, $ionicPopup, $ionicListDelegate,localstorage) {
     // Initialize reports
     $scope.reports = [];
@@ -43,22 +44,8 @@ angular.module('reporting', ['ionic'])
     $scope.last_sync = localstorage.get('last_sync',0)
     $scope.newb = undefined;
 
-    // // $http.get('http://cromie.org/mentors.json').success(function(data) {
-    // //     $scope.mentors = data;
-    // // }).error(function(){
-    //   $http.get('mentors.json').success(function (data) {
-    //       $scope.mentors = data;
-    //   });
-    // //});
-    //
-    // // $http.get('http://cromie.org/newbs.json').success(function (data) {
-    // //     $scope.newbs = data;
-    // // }).error(function(){
-    //   $http.get('newbs.json').success(function (data) {
-    //     $scope.newbs = data;
-    //
-    //   })
-    // // });
+    $scope.newbs=[];
+    $scope.mentors=[];
 
     //initializing the report
     var report_props = ['report.protocol',
@@ -73,6 +60,7 @@ angular.module('reporting', ['ionic'])
         // where we would put an unblur
       });
     }
+
 
     ////////////////////////
     // Online sync to CouchDb
@@ -105,6 +93,19 @@ angular.module('reporting', ['ionic'])
       console.log(info);
     })
 
+    mentorDb.changes({
+      live: true,
+      onChange: function (change) {
+        //$scope.getMentors();
+      }
+    });
+
+    newbDb.changes({
+      live: true,
+      onChange: function (change) {
+        //$scope.getNewbs();
+      }
+    });
     reportDb.changes({
       live: true,
       onChange: function (change) {
@@ -243,7 +244,41 @@ angular.module('reporting', ['ionic'])
       scope: $scope
     });
 
+
+    $scope.getMentors = function(){
+      mentorDb.allDocs({include_docs: true},function(err, response){
+        $scope.$apply(function() { //UPDATE scope
+          for (var i = 0; i < response.rows.length; i++) {
+            var row=response.rows[i];
+            if ($scope.mentors.indexOf(row.doc) == -1) {
+              $scope.mentors.push(row.doc);
+            }
+          }
+          console.log("got the mentors");
+          console.log($scope.mentors.length);
+        });
+      });
+
+    }
+
+    $scope.getNewbs = function(){
+      newbDb.allDocs({include_docs: true},function(err, response){
+        $scope.$apply(function() { //UPDATE scope
+          for (var i = 0; i < response.rows.length; i++) {
+            var row=response.rows[i];
+            if ($scope.newbs.indexOf(row.doc) == -1) {
+              $scope.newbs.push(row.doc);
+            }
+          }
+          console.log("got the newbs");
+          console.log($scope.newbs.length);
+        });
+      });
+
+    }
+
     $scope.showMentors = function(){
+      $scope.getMentors();
       $scope.mentorModal.show();
     }
     $scope.hideMentors = function(){
@@ -291,7 +326,8 @@ angular.module('reporting', ['ionic'])
         });
       });
     }
-    $scope.closeKeyboard=function(){
-      cordova.plugins.Keyboard.close();
-    }
+
+    $scope.getNewbs();
+    $scope.getMentors();
+
   });
