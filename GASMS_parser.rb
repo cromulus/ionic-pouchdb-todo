@@ -3,6 +3,8 @@ require 'rubygems'
 require 'httparty'
 require 'nokogiri'
 require 'open3'
+require 'fileutils'
+current_path=File.dirname(__FILE__)
 
 train_new="304"
 train_refresh="305"
@@ -81,8 +83,12 @@ newbs.each{|n| n["_id"]=Digest::SHA1.hexdigest(n[:name])}
 newb_json=JSON.generate(newbs)
 mentor_json=JSON.generate(mentors)
 
-File.open("./mentors.json", 'w') { |file| file.write(mentor_json) }
-File.open("./newbs.json", 'w') { |file| file.write(newb_json) }
+File.open(current_path+"/mentors.json", 'w') { |file|
+  file.write(mentor_json)
+}
+File.open(current_path+"/newbs.json", 'w') { |file|
+  file.write(newb_json)
+}
 
 # Runs a specified shell command in a separate thread.
 # If it exceeds the given timeout in seconds, kills it.
@@ -129,4 +135,5 @@ def run_with_timeout(command, timeout, tick)
   return output
 end
 
-run_with_timeout("node pouch_updater.js",60,1)
+run_with_timeout(current_path+"node pouch_updater.js",60,1)
+FileUtils.touch('done.txt')
