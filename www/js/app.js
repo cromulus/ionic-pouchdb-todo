@@ -5,6 +5,14 @@ angular.module('reporting', ['ionic'])
     var db = new PouchDB('reports');
     return db;
   })
+  .factory('newbDb',function(){
+    var db = new PouchDB('newbs');
+    return db;
+  })
+  .factory('mentorDb',function(){
+    var db = new PouchDB('mentors');
+    return db;
+  })
   .factory('localstorage', ['$window', function($window) {
     return {
       set: function(key, value) {
@@ -24,8 +32,9 @@ angular.module('reporting', ['ionic'])
   }])
   // indexedDB.deleteDatabase('_pouch_reports');
   // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
-
-  .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate,localstorage) {
+  // indexedDB.deleteDatabase('_pouch_newbs');
+  // indexedDB.deleteDatabase('_pouch_mentors');
+  .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb,newbDb,mentorDb, $ionicPopup, $ionicListDelegate,localstorage) {
     // Initialize reports
     $scope.reports = [];
     $scope.my_reports = [];
@@ -35,24 +44,8 @@ angular.module('reporting', ['ionic'])
     $scope.last_sync = localstorage.get('last_sync',0)
     $scope.newb = undefined;
 
-
-
-    // $http.get('http://cromie.org/mentors.json').success(function(data) {
-    //     $scope.mentors = data;
-    // }).error(function(){
-      $http.get('mentors.json').success(function (data) {
-          $scope.mentors = data;
-      });
-    //});
-
-    // $http.get('http://cromie.org/newbs.json').success(function (data) {
-    //     $scope.newbs = data;
-    // }).error(function(){
-      $http.get('newbs.json').success(function (data) {
-        $scope.newbs = data;
-
-      })
-    // });
+    $scope.newbs=[];
+    $scope.mentors=[];
 
     //initializing the report
     var report_props = ['report.protocol',
@@ -68,9 +61,22 @@ angular.module('reporting', ['ionic'])
       });
     }
 
+
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
+      $scope.newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newbs', {live: true})
+      .on('error', function (err) {
+        console.log("Syncing newbs stopped");
+        console.log(err);
+      });
+
+    $scope.mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
+    .on('error', function (err) {
+      console.log("Syncing mentors stopped");
+      console.log(err);
+    });
+
     $scope.sync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
       .on('error', function (err) {
         console.log("Syncing stopped");
@@ -86,6 +92,20 @@ angular.module('reporting', ['ionic'])
     }).on('change',function(info){
       console.log(info);
     })
+
+    mentorDb.changes({
+      live: true,
+      onUpToDate: function (change) {
+        $scope.getMentors();
+      }
+    });
+
+    newbDb.changes({
+      live: true,
+      onUpToDate: function (change) {
+        $scope.getNewbs();
+      }
+    });
 
     reportDb.changes({
       live: true,
@@ -225,7 +245,39 @@ angular.module('reporting', ['ionic'])
       scope: $scope
     });
 
+
+    $scope.getMentors = function(){
+      $scope.mentors=[];
+      mentorDb.allDocs({include_docs: true},function(err, response){
+        $scope.$apply(function() { //UPDATE scope
+          for (var i = 0; i < response.rows.length; i++) {
+            var row=response.rows[i];
+            $scope.mentors.push(row.doc)
+          }
+          console.log("got the mentors");
+          console.log($scope.mentors.length);
+        });
+      });
+
+    }
+
+    $scope.getNewbs = function(){
+      $scope.newbs=[];
+      newbDb.allDocs({include_docs: true},function(err, response){
+        $scope.$apply(function() { //UPDATE scope
+          for (var i = 0; i < response.rows.length; i++) {
+            var row=response.rows[i];
+            $scope.newbs.push(row.doc);
+          }
+          console.log("got the newbs");
+          console.log($scope.newbs.length);
+        });
+      });
+
+    }
+
     $scope.showMentors = function(){
+      $scope.getMentors();
       $scope.mentorModal.show();
     }
     $scope.hideMentors = function(){
@@ -273,7 +325,8 @@ angular.module('reporting', ['ionic'])
         });
       });
     }
-    $scope.closeKeyboard=function(){
-      cordova.plugins.Keyboard.close();
-    }
+
+    $scope.getNewbs();
+    $scope.getMentors();
+
   });
