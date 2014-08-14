@@ -71,9 +71,9 @@ angular.module('reporting', ['ionic'])
         console.log(err);
       });
 
-    $scope.mentorSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
+    $scope.mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
     .on('error', function (err) {
-      console.log("Syncing newbs stopped");
+      console.log("Syncing mentors stopped");
       console.log(err);
     });
 
