@@ -34,6 +34,7 @@ angular.module('reporting', ['ionic'])
   // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
   // indexedDB.deleteDatabase('_pouch_newbs');
   // indexedDB.deleteDatabase('_pouch_mentors');
+
   .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb,newbDb,mentorDb, $ionicPopup, $ionicListDelegate,localstorage) {
     // Initialize reports
     $scope.reports = [];
@@ -325,8 +326,5 @@ angular.module('reporting', ['ionic'])
         });
       });
     }
-
     $scope.getNewbs();
-    $scope.getMentors();
-
   });
