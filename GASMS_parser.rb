@@ -2,7 +2,6 @@
 require 'rubygems'
 require 'httparty'
 require 'nokogiri'
-
 train_new="304"
 train_refresh="305"
 mentor="302"
@@ -67,10 +66,18 @@ shifts["availshifts"].each{|k,v|
 newbs.delete_if {|k| k[:name].nil? || k[:id].nil? }
 mentors.delete_if {|k| k[:name].nil? || k[:id].nil? }
 vets.delete_if {|k| k[:name].nil? || k[:id].nil? }
+
+mentors.push({name:"Sailor Boy",id:"111"})
+mentors.push({name:"Miss Roach",id:"45"})
+
 newbs.uniq!
 mentors.uniq!
+
+mentors.each{|m| m["_id"]=Digest::SHA1.hexdigest(m[:name])}
+newbs.each{|n| n["_id"]=Digest::SHA1.hexdigest(n[:name])}
+
 newb_json=JSON.generate(newbs)
 mentor_json=JSON.generate(mentors)
 
-File.open("./www/mentors.json", 'w') { |file| file.write(mentor_json) }
-File.open("./www/newbs.json", 'w') { |file| file.write(newb_json) }
+File.open("./mentors.json", 'w') { |file| file.write(mentor_json) }
+File.open("./newbs.json", 'w') { |file| file.write(newb_json) }

@@ -5,6 +5,14 @@ angular.module('reporting', ['ionic'])
     var db = new PouchDB('reports');
     return db;
   })
+  .factor('newbDb',function(){
+    var db = new PouchDB('newbs');
+    return db
+  })
+  .factor('mentorDb',function(){
+    var db = new PouchDB('mentors');
+    return db
+  })
   .factory('localstorage', ['$window', function($window) {
     return {
       set: function(key, value) {
@@ -50,22 +58,22 @@ angular.module('reporting', ['ionic'])
     }, false);
 
 
-    // $http.get('http://cromie.org/mentors.json').success(function(data) {
-    //     $scope.mentors = data;
-    // }).error(function(){
-      $http.get('mentors.json').success(function (data) {
-          $scope.mentors = data;
-      });
-    //});
-
-    // $http.get('http://cromie.org/newbs.json').success(function (data) {
+    // // $http.get('http://cromie.org/mentors.json').success(function(data) {
+    // //     $scope.mentors = data;
+    // // }).error(function(){
+    //   $http.get('mentors.json').success(function (data) {
+    //       $scope.mentors = data;
+    //   });
+    // //});
+    //
+    // // $http.get('http://cromie.org/newbs.json').success(function (data) {
+    // //     $scope.newbs = data;
+    // // }).error(function(){
+    //   $http.get('newbs.json').success(function (data) {
     //     $scope.newbs = data;
-    // }).error(function(){
-      $http.get('newbs.json').success(function (data) {
-        $scope.newbs = data;
-
-      })
-    // });
+    //
+    //   })
+    // // });
 
     //initializing the report
     var report_props = ['report.protocol',
@@ -84,6 +92,18 @@ angular.module('reporting', ['ionic'])
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
+      $scope.newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newbs', {live: true})
+      .on('error', function (err) {
+        console.log("Syncing newbs stopped");
+        console.log(err);
+      });
+
+    $scope.mentorSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
+    .on('error', function (err) {
+      console.log("Syncing newbs stopped");
+      console.log(err);
+    });
+
     $scope.sync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
       .on('error', function (err) {
         console.log("Syncing stopped");
