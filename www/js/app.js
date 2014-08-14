@@ -5,13 +5,13 @@ angular.module('reporting', ['ionic'])
     var db = new PouchDB('reports');
     return db;
   })
-  .factor('newbDb',function(){
+  .factory('newbDb',function(){
     var db = new PouchDB('newbs');
-    return db
+    return db;
   })
-  .factor('mentorDb',function(){
+  .factory('mentorDb',function(){
     var db = new PouchDB('mentors');
-    return db
+    return db;
   })
   .factory('localstorage', ['$window', function($window) {
     return {
@@ -33,7 +33,7 @@ angular.module('reporting', ['ionic'])
   // indexedDB.deleteDatabase('_pouch_reports');
   // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
 
-  .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb, $ionicPopup, $ionicListDelegate,localstorage) {
+  .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb,newbDb,mentorDb, $ionicPopup, $ionicListDelegate,localstorage) {
     // Initialize reports
     $scope.reports = [];
     $scope.my_reports = [];
@@ -42,21 +42,6 @@ angular.module('reporting', ['ionic'])
     $scope.mentor = localstorage.getObject('mentor',{name:'Not You',id:"0"});
     $scope.last_sync = localstorage.get('last_sync',0)
     $scope.newb = undefined;
-
-
-    //checking to see if we are online
-    $scope.online = navigator.onLine;
-    $window.addEventListener("offline", function () {
-      $scope.$apply(function() {
-        $scope.online = false;
-      });
-    }, false);
-    $window.addEventListener("online", function () {
-      $scope.$apply(function() {
-        $scope.online = true;
-      });
-    }, false);
-
 
     // // $http.get('http://cromie.org/mentors.json').success(function(data) {
     // //     $scope.mentors = data;
