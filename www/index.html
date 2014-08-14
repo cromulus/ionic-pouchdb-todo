@@ -22,7 +22,6 @@
 
 <body ng-app="reporting" ng-controller="reportCtrl">
 <ion-header-bar class="bar-positive">
-  <button class="button">{{report_count}}</button>
   <h1 class="title" ng-click="showMentors()">{{mentor.name}}</h1>
   <button class="button button-icon" ng-click="showReportList()">
     <i class="ion-compose icon"></i>
@@ -37,10 +36,12 @@
   </ion-list>
 </ion-content>
 <ion-footer-bar class="bar-positive">
+<button class="button button-icon" ng-click="">
+  <i class="icon" ng-class="{'ion-connection-bars' : synced, 'ion-alert-circled' : !synced}"></i>
+</button>
   <h1 class="title">Synced @ {{last_sync | date:'M/dd h:mma'}}</h1>
-  <button class="button button-icon" ng-click="">
-    <i class="icon" ng-class="{'ion-connection-bars' : synced, 'ion-alert-circled' : !synced}"></i>
-  </button>
+
+  <button class="button">{{report_count}}</button>
 </ion-header-bar>
 <script id="report-list.html" type="text/ng-template">
   <div class="modal">
