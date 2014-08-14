@@ -5,6 +5,14 @@ angular.module('reporting', ['ionic'])
     var db = new PouchDB('reports');
     return db;
   })
+  .factor('newbDb',function(){
+    var db = new PouchDB('newbs');
+    return db
+  })
+  .factor('mentorDb',function(){
+    var db = new PouchDB('mentors');
+    return db
+  })
   .factory('localstorage', ['$window', function($window) {
     return {
       set: function(key, value) {
@@ -33,28 +41,40 @@ angular.module('reporting', ['ionic'])
     $scope.total_reports = 0;
     $scope.mentor = localstorage.getObject('mentor',{name:'Not You',id:"0"});
     $scope.last_sync = localstorage.get('last_sync',0)
-    $scope.newb = "undefined";
+    $scope.newb = undefined;
 
 
-
-    // $http.get('http://cromie.org/mentors.json').success(function(data) {
-    //     $scope.mentors = data;
-    // }).error(function(){
-      $http.get('mentors.json').success(function (data) {
-          $scope.mentors = data;
-          console.log("getting the mentor data");
+    //checking to see if we are online
+    $scope.online = navigator.onLine;
+    $window.addEventListener("offline", function () {
+      $scope.$apply(function() {
+        $scope.online = false;
       });
-    //});
+    }, false);
+    $window.addEventListener("online", function () {
+      $scope.$apply(function() {
+        $scope.online = true;
+      });
+    }, false);
 
-    // $http.get('http://cromie.org/newbs.json').success(function (data) {
+
+    // // $http.get('http://cromie.org/mentors.json').success(function(data) {
+    // //     $scope.mentors = data;
+    // // }).error(function(){
+    //   $http.get('mentors.json').success(function (data) {
+    //       $scope.mentors = data;
+    //   });
+    // //});
+    //
+    // // $http.get('http://cromie.org/newbs.json').success(function (data) {
+    // //     $scope.newbs = data;
+    // // }).error(function(){
+    //   $http.get('newbs.json').success(function (data) {
     //     $scope.newbs = data;
-    // }).error(function(){
-      $http.get('newbs.json').success(function (data) {
-        $scope.newbs = data;
-        console.log(data);
-      })
-    // });
-    console.log($scope.newbs);
+    //
+    //   })
+    // // });
+
     //initializing the report
     var report_props = ['report.protocol',
                         'report.social',
@@ -72,7 +92,19 @@ angular.module('reporting', ['ionic'])
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
-    $scope.sync = reportDb.sync('http://127.0.0.1:5984/reports', {live: true})
+      $scope.newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newbs', {live: true})
+      .on('error', function (err) {
+        console.log("Syncing newbs stopped");
+        console.log(err);
+      });
+
+    $scope.mentorSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
+    .on('error', function (err) {
+      console.log("Syncing newbs stopped");
+      console.log(err);
+    });
+
+    $scope.sync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
       .on('error', function (err) {
         console.log("Syncing stopped");
         console.log(err);
@@ -159,7 +191,7 @@ angular.module('reporting', ['ionic'])
       r.mentor_id=$scope.mentor.id
       r.mentor = $scope.mentor.name;
       r.newb = $scope.newb.name;
-      r.newb_id=$scope.newb.id;
+      r.newb_id = $scope.newb.id;
       reportDb.post(angular.copy(r), function(err, res) {
         if (err) console.log(err)
 
@@ -180,7 +212,7 @@ angular.module('reporting', ['ionic'])
 
     $scope.editReport = function(this_report) {
       $scope.report=this_report;
-      $scope.newb=this_report.newb;
+      $scope.newb={name:this_report.newb,id:this_report.newb_id};
       $scope.reportModal.show();
     }
 
@@ -265,7 +297,7 @@ angular.module('reporting', ['ionic'])
         $scope.$apply(function() { //UPDATE
 
           for (var i = 0; i < response.rows.length; i++) {
-            if ($scope.mentor.id === response.rows[i].doc.mentor.id) {
+            if ($scope.mentor.id == response.rows[i].doc.mentor_id) {
               console.log(response.rows[i].doc);
               $scope.my_reports.push(response.rows[i].doc);
             }

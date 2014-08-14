@@ -53,7 +53,7 @@
         <ion-item ng-repeat="report in my_reports track by $index | orderBy:'timestamp':true " class="item-icon-right"
                   ng-click="editReport(report)">
           <i class="icon ion-ios7-arrow-left"></i>
-          {{report.newb.name}} | {{report.millitimestamp | date:'MM/dd @ h:mma'}}
+          {{report.newb}} | {{report.millitimestamp | date:'MM/dd @ h:mma'}}
           <ion-option-button class="button-assertive" ng-click="delete(report)">
             Delete
           </ion-option-button>
