@@ -106,7 +106,7 @@ def run_with_timeout(command, timeout, tick)
       Kernel.select([stderrout], nil, nil, tick)
       # Try to read the data
       begin
-        output << stderrout.read_nonblock(BUFFER_SIZE)
+        output << stderrout.read_nonblock(4096)
       rescue IO::WaitReadable
         # A read would block, so loop around for another select
       rescue EOFError
