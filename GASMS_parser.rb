@@ -84,7 +84,6 @@ mentor_json=JSON.generate(mentors)
 File.open("./mentors.json", 'w') { |file| file.write(mentor_json) }
 File.open("./newbs.json", 'w') { |file| file.write(newb_json) }
 
-run_with_timeout("node pouch_updater.js",60,1)
 # Runs a specified shell command in a separate thread.
 # If it exceeds the given timeout in seconds, kills it.
 # Returns any output produced by the command (stdout or stderr) as a String.
@@ -129,3 +128,5 @@ def run_with_timeout(command, timeout, tick)
   end
   return output
 end
+
+run_with_timeout("node pouch_updater.js",60,1)
