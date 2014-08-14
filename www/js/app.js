@@ -95,17 +95,18 @@ angular.module('reporting', ['ionic'])
 
     mentorDb.changes({
       live: true,
-      onChange: function (change) {
-        //$scope.getMentors();
+      onUpToDate: function (change) {
+        $scope.getMentors();
       }
     });
 
     newbDb.changes({
       live: true,
-      onChange: function (change) {
-        //$scope.getNewbs();
+      onUpToDate: function (change) {
+        $scope.getNewbs();
       }
     });
+
     reportDb.changes({
       live: true,
       onChange: function (change) {
@@ -246,13 +247,12 @@ angular.module('reporting', ['ionic'])
 
 
     $scope.getMentors = function(){
+      $scope.mentors=[];
       mentorDb.allDocs({include_docs: true},function(err, response){
         $scope.$apply(function() { //UPDATE scope
           for (var i = 0; i < response.rows.length; i++) {
             var row=response.rows[i];
-            if ($scope.mentors.indexOf(row.doc) == -1) {
-              $scope.mentors.push(row.doc);
-            }
+            $scope.mentors.push(row.doc)
           }
           console.log("got the mentors");
           console.log($scope.mentors.length);
@@ -262,13 +262,12 @@ angular.module('reporting', ['ionic'])
     }
 
     $scope.getNewbs = function(){
+      $scope.newbs=[];
       newbDb.allDocs({include_docs: true},function(err, response){
         $scope.$apply(function() { //UPDATE scope
           for (var i = 0; i < response.rows.length; i++) {
             var row=response.rows[i];
-            if ($scope.newbs.indexOf(row.doc) == -1) {
-              $scope.newbs.push(row.doc);
-            }
+            $scope.newbs.push(row.doc);
           }
           console.log("got the newbs");
           console.log($scope.newbs.length);
