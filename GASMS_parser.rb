@@ -135,5 +135,5 @@ def run_with_timeout(command, timeout, tick)
   return output
 end
 
-run_with_timeout(current_path+"node pouch_updater.js",60,1)
+run_with_timeout("node #{current_path}/pouch_updater.js",60,1)
 FileUtils.touch('done.txt')
