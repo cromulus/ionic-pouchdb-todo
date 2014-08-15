@@ -326,5 +326,9 @@ angular.module('reporting', ['ionic'])
         });
       });
     }
+    $scope.updateData=function(){
+      $scope.getNewbs();
+      $scope.getMentors();
+    }
     $scope.getNewbs();
   });

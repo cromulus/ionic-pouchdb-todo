@@ -36,8 +36,8 @@
   </ion-list>
 </ion-content>
 <ion-footer-bar class="bar-positive">
-<button class="button button-icon" ng-click="">
-  <i class="icon" ng-click="getNewbs()" ng-class="{'ion-connection-bars' : synced, 'ion-alert-circled' : !synced}"></i>
+<button class="button button-icon" ng-click="updateData()">
+  <i class="icon" ng-class="{'ion-connection-bars' : synced, 'ion-alert-circled' : !synced}"></i>
 </button>
   <h1 class="title">Synced @ {{last_sync | date:'M/dd h:mma'}}</h1>
 
