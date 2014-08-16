@@ -6,11 +6,11 @@ angular.module('reporting', ['ionic'])
     return db;
   })
   .factory('newbDb',function(){
-    var db = new PouchDB('newbs');
+    var db = new PouchDB('newb_list_0');
     return db;
   })
   .factory('mentorDb',function(){
-    var db = new PouchDB('mentors');
+    var db = new PouchDB('mentor_list_0');
     return db;
   })
   .factory('localstorage', ['$window', function($window) {
@@ -30,10 +30,18 @@ angular.module('reporting', ['ionic'])
       }
     }
   }])
+
   // indexedDB.deleteDatabase('_pouch_reports');
   // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
   // indexedDB.deleteDatabase('_pouch_newbs');
   // indexedDB.deleteDatabase('_pouch_mentors');
+  // indexedDB.deleteDatabase('_pouch_reports');
+  // indexedDB.deleteDatabase('_pouch_reports-mrview-temp');
+  // indexedDB.deleteDatabase('_pouch_newb_list');
+  // indexedDB.deleteDatabase('_pouch_mentor_list');
+  // indexedDB.deleteDatabase('_pouch_newb_list_0');
+  // indexedDB.deleteDatabase('_pouch_mentor_list_0');
+
 
   .controller('reportCtrl', function($scope, $ionicModal,$http, reportDb,newbDb,mentorDb, $ionicPopup, $ionicListDelegate,localstorage) {
     // Initialize reports
@@ -66,13 +74,13 @@ angular.module('reporting', ['ionic'])
     ////////////////////////
     // Online sync to CouchDb
     ////////////////////////
-      $scope.newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newbs', {live: true})
+      $scope.newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newb_list_0', {live: true})
       .on('error', function (err) {
         console.log("Syncing newbs stopped");
         console.log(err);
       });
 
-    $scope.mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
+    $scope.mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentor_list_0', {live: true})
     .on('error', function (err) {
       console.log("Syncing mentors stopped");
       console.log(err);
@@ -254,6 +262,9 @@ angular.module('reporting', ['ionic'])
           for (var i = 0; i < response.rows.length; i++) {
             var row=response.rows[i];
             $scope.mentors.push(row.doc)
+            if ($scope.newbs.indexOf(row.doc) !== -1) {
+              $scope.newbs.slice($scope.newbs.indexOf(row.doc),1);
+            }
           }
           console.log("got the mentors");
           console.log($scope.mentors.length);

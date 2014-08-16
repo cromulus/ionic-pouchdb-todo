@@ -1,6 +1,6 @@
 var pouch     = require('pouchdb');
-var mentorDb  = new pouch('mentors');
-var newbDb    = new pouch('newbs');
+var mentorDb  = new pouch('mentor_list_0');
+var newbDb    = new pouch('newb_list_0');
 var fs = require('fs');
 
 var mentorfile = __dirname + '/mentors.json';
@@ -17,8 +17,8 @@ function intersect_safe(a, b)
 
   while( ai < a.length && bi < b.length )
   {
-     if      (a[ai]["_id"] < b[bi]["_id"] ){ ai++; }
-     else if (a[ai]["_id"] > b[bi]["_id"] ){ bi++; }
+     if      (a[ai]._id < b[bi]._id ){ ai++; }
+     else if (a[ai]._id > b[bi]._id ){ bi++; }
      else /* they're equal */
      {
        result.push(a[ai]);
@@ -30,7 +30,7 @@ function intersect_safe(a, b)
   return result;
 }
 
-mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentors', {live: true})
+mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentor_list_0', {live: true})
   .on('error', function (err) {
     console.log("Syncing stopped");
     console.log(err);
@@ -41,7 +41,7 @@ mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch
   })
 
 
-newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newbs', {live: true})
+newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newb_list_0', {live: true})
   .on('error', function (err) {
     console.log("Syncing stopped");
     console.log(err);
@@ -71,6 +71,14 @@ fs.readFile(mentorfile, 'utf8', function (err, data) {
       if (err) console.log(err);
       console.log(res);
     });
+
+    for (var i = 0; i < mentor_data.length; i++) {
+      console.log("Removing: "+mentor_data[i].name);
+      newbDb.remove(mentor_data[i].id,function(err, response) {
+      console.log(response);
+      });
+    }
+    console
   });
 });
 
