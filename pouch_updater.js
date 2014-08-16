@@ -26,8 +26,19 @@ function intersect_safe(a, b)
        bi++;
      }
   }
-
   return result;
+}
+
+// foo - bar
+function arrayDiff(foo,bar){
+  var baz = [];
+
+  foo.forEach(function(key) {
+    if (-1 === bar.indexOf(key)) {
+      baz.push(key);
+    }
+  }, this);
+  return baz;
 }
 
 mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentor_list_0', {live: true})
@@ -58,26 +69,22 @@ fs.readFile(mentorfile, 'utf8', function (err, data) {
     return;
   }
 
-  mentor_data = JSON.parse(data);
+  var mentor_data = JSON.parse(data);
   mentorDb.allDocs({include_docs: true},function(err, response){
     var arr=[];
     for (var i = 0; i < response.rows.length; i++) {
       arr.push(response.rows[i].doc)
     }
-    new_mentors=intersect_safe(arr,mentor_data);
+
+    // new mentor_data - the mentors we've got
+    new_mentors=arrayDiff(mentor_data,arr);
+
     console.log("new_mentors");
     console.log(new_mentors);
     mentorDb.bulkDocs(new_mentors,function(err, res) {
       if (err) console.log(err);
       console.log(res);
     });
-
-    // for (var i = 0; i < mentor_data.length; i++) {
-    //   console.log("Removing: "+mentor_data[i].name);
-    //   newbDb.remove(mentor_data[i].id,function(err, response) {
-    //   console.log(response);
-    //   });
-    // }
   });
 });
 
@@ -86,14 +93,17 @@ fs.readFile(newbfile, 'utf8', function (err, data) {
     console.log('Error: ' + err);
     return;
   }
-  newb_data = JSON.parse(data);
+  var newb_data = JSON.parse(data);
 
   newbDb.allDocs({include_docs: true},function(err, response){
     var arr=[];
     for (var i = 0; i < response.rows.length; i++) {
       arr.push(response.rows[i].doc)
     }
-    new_newbs=intersect_safe(arr,newb_data);
+
+    // subtract old newbs from the set of all newbs
+    new_newbs=arrayDiff(newb_data,arr);
+
     newbDb.bulkDocs(newb_data,function(err, res) {
       if (err) console.log(err);
       console.log(res);
