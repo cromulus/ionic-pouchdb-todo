@@ -221,13 +221,13 @@ angular.module('reporting', ['ionic'])
         $scope.newb=newb;
         // defaulting things appropriately
         r={};
-        r.protocol = 5;
-        r.social = 5;
-        r.small = 5;
-        r.large = 5;
-        r.safety = 5;
-        r.theater = 5;
-        r.direction = 5;
+        r.protocol = "5";
+        r.social = "5";
+        r.small = "5";
+        r.large = "5";
+        r.safety = "5";
+        r.theater = "5";
+        r.direction = "5";
         $scope.report=r;
         $scope.reportModal.show();
       }
