@@ -77,7 +77,7 @@ fs.readFile(mentorfile, 'utf8', function (err, data) {
     }
 
     // new mentor_data - the mentors we've got
-    new_mentors=arrayDiff(mentor_data,arr);
+    var new_mentors=arrayDiff(mentor_data,arr);
 
     console.log("new_mentors");
     console.log(new_mentors);
@@ -102,9 +102,9 @@ fs.readFile(newbfile, 'utf8', function (err, data) {
     }
 
     // subtract old newbs from the set of all newbs
-    new_newbs=arrayDiff(newb_data,arr);
+    var new_newbs=arrayDiff(newb_data,arr);
 
-    newbDb.bulkDocs(newb_data,function(err, res) {
+    newbDb.bulkDocs(new_newbs,function(err, res) {
       if (err) console.log(err);
       console.log(res);
     });
