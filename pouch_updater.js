@@ -59,7 +59,7 @@ fs.readFile(mentorfile, 'utf8', function (err, data) {
   }
 
   mentor_data = JSON.parse(data);
-  newbDb.allDocs({include_docs: true},function(err, response){
+  mentorDb.allDocs({include_docs: true},function(err, response){
     var arr=[];
     for (var i = 0; i < response.rows.length; i++) {
       arr.push(response.rows[i].doc)
@@ -72,13 +72,12 @@ fs.readFile(mentorfile, 'utf8', function (err, data) {
       console.log(res);
     });
 
-    for (var i = 0; i < mentor_data.length; i++) {
-      console.log("Removing: "+mentor_data[i].name);
-      newbDb.remove(mentor_data[i].id,function(err, response) {
-      console.log(response);
-      });
-    }
-    console
+    // for (var i = 0; i < mentor_data.length; i++) {
+    //   console.log("Removing: "+mentor_data[i].name);
+    //   newbDb.remove(mentor_data[i].id,function(err, response) {
+    //   console.log(response);
+    //   });
+    // }
   });
 });
 
