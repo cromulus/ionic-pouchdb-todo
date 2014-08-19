@@ -1,7 +1,11 @@
 var pouch     = require('pouchdb');
+var GoogleSpreadsheet = require("google-spreadsheet");
+var fs = require('fs');
+
 var mentorDb  = new pouch('mentor_list_0');
 var newbDb    = new pouch('newb_list_0');
-var fs = require('fs');
+var reports    = new pouch('reports');
+
 
 var mentorfile = __dirname + '/mentors.json';
 var newbfile = __dirname + '/newbs.json';
@@ -9,6 +13,7 @@ var newbfile = __dirname + '/newbs.json';
 var newb_data;
 var mentor_data;
 
+var my_sheet = new GoogleSpreadsheet('<spreadsheet key>');
 
 function intersect_safe(a, b)
 {
@@ -63,6 +68,17 @@ newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com
   })
 
 
+reportSync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
+  .on('error', function (err) {
+    console.log("report Syncing stopped");
+    console.log(err);
+  }).on('change',function(info){
+    console.log(info);
+  }).on('uptodate', function (info) {
+    console.log('reports Synced!')
+  })
+
+
 fs.readFile(mentorfile, 'utf8', function (err, data) {
   if (err) {
     console.log('Error: ' + err);
@@ -113,6 +129,8 @@ fs.readFile(newbfile, 'utf8', function (err, data) {
   });
 });
 
+
+my_sheet.setAuth('<google email/username>','<google pass>', function(err){
 
 //console.log(newb_data);
 // adding the stuff in a callback
