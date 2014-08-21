@@ -44,77 +44,77 @@ function arrayDiff(foo,bar){
   return baz;
 }
 
-// mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentor_list_0', {live: true})
-//   .on('error', function (err) {
-//     console.log("Syncing stopped");
-//     console.log(err);
-//   }).on('change',function(info){
-//     console.log(info);
-//   }).on('uptodate',function(info){
-//     console.log('mentors Synced!')
-//   })
-//
-//
-// newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newb_list_0', {live: true})
-//   .on('error', function (err) {
-//     console.log("Syncing stopped");
-//     console.log(err);
-//   }).on('change',function(info){
-//     console.log(info);
-//   }).on('uptodate', function (info) {
-//     console.log('newbs Synced!')
-//   })
-//
-//
-// fs.readFile(mentorfile, 'utf8', function (err, data) {
-//   if (err) {
-//     console.log('Error: ' + err);
-//     return;
-//   }
-//
-//   var mentor_data = JSON.parse(data);
-//   mentorDb.allDocs({include_docs: true},function(err, response){
-//     var arr=[];
-//     for (var i = 0; i < response.rows.length; i++) {
-//       arr.push(response.rows[i].doc)
-//     }
-//
-//     // new mentor_data - the mentors we've got
-//     var new_mentors=arrayDiff(mentor_data,arr);
-//
-//     console.log("new_mentors");
-//     console.log(new_mentors);
-//     mentorDb.bulkDocs(new_mentors,function(err, res) {
-//       if (err) console.log(err);
-//       console.log(res);
-//     });
-//   });
-// });
-//
-// fs.readFile(newbfile, 'utf8', function (err, data) {
-//   if (err) {
-//     console.log('Error: ' + err);
-//     return;
-//   }
-//   var newb_data = JSON.parse(data);
-//
-//   newbDb.allDocs({include_docs: true},function(err, response){
-//     var arr=[];
-//     for (var i = 0; i < response.rows.length; i++) {
-//       arr.push(response.rows[i].doc)
-//     }
-//
-//     // subtract old newbs from the set of all newbs
-//     var new_newbs=arrayDiff(newb_data,arr);
-//
-//     newbDb.bulkDocs(new_newbs,function(err, res) {
-//       if (err) console.log(err);
-//       console.log(res);
-//     });
-//     console.log("new_newbs");
-//     console.log(new_newbs);
-//   });
-// });
+mentorSync = mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentor_list_0', {live: true})
+  .on('error', function (err) {
+    console.log("Syncing stopped");
+    console.log(err);
+  }).on('change',function(info){
+    console.log(info);
+  }).on('uptodate',function(info){
+    console.log('mentors Synced!')
+  })
+
+
+newbSync = newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newb_list_0', {live: true})
+  .on('error', function (err) {
+    console.log("Syncing stopped");
+    console.log(err);
+  }).on('change',function(info){
+    console.log(info);
+  }).on('uptodate', function (info) {
+    console.log('newbs Synced!')
+  })
+
+
+fs.readFile(mentorfile, 'utf8', function (err, data) {
+  if (err) {
+    console.log('Error: ' + err);
+    return;
+  }
+
+  var mentor_data = JSON.parse(data);
+  mentorDb.allDocs({include_docs: true},function(err, response){
+    var arr=[];
+    for (var i = 0; i < response.rows.length; i++) {
+      arr.push(response.rows[i].doc)
+    }
+
+    // new mentor_data - the mentors we've got
+    var new_mentors=arrayDiff(mentor_data,arr);
+
+    console.log("new_mentors");
+    console.log(new_mentors);
+    mentorDb.bulkDocs(new_mentors,function(err, res) {
+      if (err) console.log(err);
+      console.log(res);
+    });
+  });
+});
+
+fs.readFile(newbfile, 'utf8', function (err, data) {
+  if (err) {
+    console.log('Error: ' + err);
+    return;
+  }
+  var newb_data = JSON.parse(data);
+
+  newbDb.allDocs({include_docs: true},function(err, response){
+    var arr=[];
+    for (var i = 0; i < response.rows.length; i++) {
+      arr.push(response.rows[i].doc)
+    }
+
+    // subtract old newbs from the set of all newbs
+    var new_newbs=arrayDiff(newb_data,arr);
+
+    newbDb.bulkDocs(new_newbs,function(err, res) {
+      if (err) console.log(err);
+      console.log(res);
+    });
+    console.log("new_newbs");
+    console.log(new_newbs);
+  });
+});
 
 var reportDb  = new pouch('reports');
 var report_sync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
