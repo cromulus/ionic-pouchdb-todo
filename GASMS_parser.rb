@@ -4,6 +4,8 @@ require 'httparty'
 require 'nokogiri'
 require 'open3'
 require 'fileutils'
+require 'couchdb'
+require 'google_drive'
 current_path=File.dirname(__FILE__)
 
 train_new="304"
@@ -135,5 +137,34 @@ def run_with_timeout(command, timeout, tick)
   return output
 end
 
-run_with_timeout("node #{current_path}/pouch_updater.js",60,1)
+run_with_timeout("node #{current_path}/pouch_updater.js",120,1)
+
+session = GoogleDrive.login("testing@cromie.org", "gpe2014baby")
+ws = session.spreadsheet_by_key("1vZ88NCVHppwImkJ1Q4TSyF8bg6fVgINBiAcHX3rcAf0").worksheets[0]
+
+server = CouchDB::Server.new "gpementor.iriscouch.com", 5984, "pouchdb","pouchdbpassword8"
+reports = CouchDB::Database.new server, "reports"
+design = CouchDB::Design.new reports, "design_2"
+view = CouchDB::Design::View.new design, "all_docs",
+  "function(document) { emit(document); }"
+design.save
+collection = view.collection
+
+keys=collection[0].key.keys
+i=1
+keys.each{|key|
+  ws[1,i]=key
+  i+=1
+}
+i=2
+collection.each{|doc|
+  row=i
+  col=1
+  doc.key.values.each{|val|
+    ws[row,col]=val
+    col+=1
+  }
+  i+=1
+}
+ws.save
 FileUtils.touch('done.txt')
