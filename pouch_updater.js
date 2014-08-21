@@ -4,7 +4,7 @@ var fs = require('fs');
 
 //var mentorDb  = new pouch('mentor_list_0');
 //var newbDb    = new pouch('newb_list_0');
-var reportDb  = new pouch('reports');
+
 
 
 var mentorfile = __dirname + '/mentors.json';
@@ -116,7 +116,7 @@ function arrayDiff(foo,bar){
 //   });
 // });
 
-
+var reportDb  = new pouch('reports');
 var report_sync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
   .on('error', function (err) {
     console.log("report Syncing stopped");
@@ -124,42 +124,44 @@ var report_sync = reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iris
   }).on('change',function(info){
     console.log(info);
   }).on('uptodate', function (info) {
+    Spreadsheet.load({
+        debug: true,
+        spreadsheetName: 'Mentor Reporting',
+        worksheetName: 'DO NOT EDIT',
+        spreadsheetId: "1vZ88NCVHppwImkJ1Q4TSyF8bg6fVgINBiAcHX3rcAf0",
+        worksheetId:"0",
+        // Username and Password
+        username: 'testing@cromie.org',
+        password: 'gpe2014baby',
+      }, function sheetReady(err, spreadsheet) {
+
+        reportDb.allDocs({include_docs: true},function(err, response){
+          var keys=[];
+          for(var name in response.rows[0].doc) {
+            keys.push(name);
+          }
+          //use speadsheet!
+          var data=[];
+          spreadsheet.add({1: keys});
+          for (var i = 0; i < response.rows.length; i++) {
+
+            var report = response.rows[i].doc;
+            var values = Object.keys(report).map(function(k){return report[k]});
+            data.push(values);
+          }
+          spreadsheet.add({2:data});
+          spreadsheet.send({autosize:true},function(err,rows,info){
+            if (err) {
+              console.log(err);
+            }
+          });
+        });
+    });
+
     console.log('reports Synced!')
   })
 
 
-Spreadsheet.load({
-    debug: true,
-    spreadsheetName: 'Mentor Reporting',
-    worksheetName: 'DO NOT EDIT',
-    spreadsheetId: "1vZ88NCVHppwImkJ1Q4TSyF8bg6fVgINBiAcHX3rcAf0",
-    worksheetId:"0",
-    // Username and Password
-    username: 'testing@cromie.org',
-    password: 'gpe2014baby',
-  }, function sheetReady(err, spreadsheet) {
-    var reports=[];
-    reportDb.allDocs({include_docs: true},function(err, response){
-      for (var i = 0; i < response.rows.length; i++) {
-        reports.push(response.rows[i].doc);
-      }
-    });
-
-    var keys=[];
-    for(var name in reports[0]) {
-      keys.push(name);
-    }
-
-    //use speadsheet!
-    spreadsheet.add({1: keys});
-
-    for (var i = 0; i < reports.length; i++) {
-      var values = Object.keys(reports[i]).map(function(k){return reports[i][k]});
-      console.log(values);
-      var row_num=i+2;
-      spreadsheet.add({row_num: values});
-    }
-});
 
 // var my_sheet = new GoogleSpreadsheet('1vZ88NCVHppwImkJ1Q4TSyF8bg6fVgINBiAcHX3rcAf0');
 //
