@@ -4,6 +4,9 @@ require 'httparty'
 require 'nokogiri'
 require 'open3'
 require 'fileutils'
+# require 'couchdb'
+# require 'google_drive'
+
 current_path=File.dirname(__FILE__)
 
 train_new="304"
@@ -17,6 +20,17 @@ newbs,mentors,vets = [],[],[]
 people[:newbs]=newbs
 people[:vets]=vets
 people[:mentors]=mentors
+
+# server = CouchDB::Server.new "gpementor.iriscouch.com", 5984, "pouchdb","pouchdbpassword8"
+# reports = CouchDB::Database.new server, "reports"
+#
+#
+# session = GoogleDrive.login("testing@cromie.org", "gpe2014baby")
+# ws = session.spreadsheet_by_key("1vZ88NCVHppwImkJ1Q4TSyF8bg6fVgINBiAcHX3rcAf0").worksheets[0]
+#
+# #dumping all reports
+# reports=ws.rows
+
 
 
 def login
