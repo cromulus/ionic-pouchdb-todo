@@ -1,0 +1,19 @@
+CACHE MANIFEST
+# 2014-08-22:v3
+
+# Explicitly cached 'master entries'.
+CACHE:
+/favicon.ico
+/
+index.html
+/lib/ionic/css/ionic.css
+/css/app.css
+/lib/ionic/js/ionic.bundle.js
+/lib/pouchdb/dist/pouchdb-nightly.js
+/js/app.js
+images/logo.png
+
+
+# Resources that require the user to be online.
+NETWORK:
+*
