@@ -167,4 +167,19 @@ collection.each{|doc|
   i+=1
 }
 ws.save
+
+newb_ws =  session.spreadsheet_by_key("1vZ88NCVHppwImkJ1Q4TSyF8bg6fVgINBiAcHX3rcAf0").worksheets[1]
+
+row=2
+
+newbs.each{|newb|
+  col=1
+  newb.values.each{|val|
+    newb_ws[row,col]=val
+    col+=1
+  }
+  row+=1
+}
+
+newb_ws.save
 FileUtils.touch('done.txt')

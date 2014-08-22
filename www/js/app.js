@@ -338,8 +338,14 @@ angular.module('reporting', ['ionic'])
       });
     }
     $scope.updateData=function(){
+      mentorDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/mentor_list_0', {live: true})
+      reportDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/reports', {live: true})
+
+newbDb.sync('https://pouchdb:pouchdbpassword8@gpementor.iriscouch.com/newb_list_0', {live: true})
+
       $scope.getNewbs();
       $scope.getMentors();
+
     }
     $scope.getNewbs();
   });
